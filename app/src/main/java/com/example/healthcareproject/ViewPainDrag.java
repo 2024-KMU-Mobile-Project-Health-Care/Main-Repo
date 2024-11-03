@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewPainDrag extends View {
-    private Paint paint;
-    private Path path;
+    private Paint currentPaint;
+    private Path currentPath;
     private Bitmap background;
     private List<PainInfo> painInfoList;
     private PainInfo currentPainInfo;
@@ -29,11 +29,11 @@ public class ViewPainDrag extends View {
     }
 
     private void init() {
-        paint = new Paint();
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(45f);
+        currentPaint = new Paint();
+        currentPaint.setStyle(Paint.Style.STROKE);
+        currentPaint.setStrokeWidth(45f);
 
-        path = new Path();
+        currentPath = new Path();
         painInfoList = new ArrayList<>();
         currentPainType = getResources().getString(R.string.pain_type_0);
 
@@ -43,8 +43,7 @@ public class ViewPainDrag extends View {
         int newHeight = (int) (originalBackground.getHeight() * scaleFactor);
         background = Bitmap.createScaledBitmap(originalBackground, newWidth, newHeight, true);
 
-        // Set default paint style based on the initial type
-        updatePaintStyle(currentPainType);
+        updatePaintStyle(currentPaint, currentPainType);
     }
 
     @Override
@@ -53,7 +52,25 @@ public class ViewPainDrag extends View {
         if (background != null) {
             canvas.drawBitmap(background, 0, 0, null);
         }
-        canvas.drawPath(path, paint);
+
+        // Draw each PainInfo path with its specific paint style
+        for (PainInfo painInfo : painInfoList) {
+            Paint paint = createPaintForPainType(painInfo.getPainType());
+            Path path = new Path();
+            List<float[]> coordinates = painInfo.getCoordinates();
+
+            if (!coordinates.isEmpty()) {
+                path.moveTo(coordinates.get(0)[0], coordinates.get(0)[1]);
+                for (int i = 1; i < coordinates.size(); i++) {
+                    path.lineTo(coordinates.get(i)[0], coordinates.get(i)[1]);
+                }
+            }
+
+            canvas.drawPath(path, paint);
+        }
+
+        // Draw the current path
+        canvas.drawPath(currentPath, currentPaint);
     }
 
     @Override
@@ -67,12 +84,12 @@ public class ViewPainDrag extends View {
                     // Disable drawing if pain type is "비활성화"
                     return false;
                 }
-                path.moveTo(x, y);
+                currentPath.moveTo(x, y);
                 currentPainInfo = new PainInfo(currentPainType);
                 currentPainInfo.addCoordinate(x, y);
                 return true;
             case MotionEvent.ACTION_MOVE:
-                path.lineTo(x, y);
+                currentPath.lineTo(x, y);
                 if (currentPainInfo != null) {
                     currentPainInfo.addCoordinate(x, y);
                 }
@@ -82,6 +99,7 @@ public class ViewPainDrag extends View {
                     painInfoList.add(currentPainInfo);
                     currentPainInfo = null;
                 }
+                currentPath = new Path(); // Reset the path for the next stroke
                 break;
         }
         invalidate();
@@ -89,16 +107,17 @@ public class ViewPainDrag extends View {
     }
 
     public void clearPath() {
-        path.reset();
+        currentPath.reset();
+        painInfoList.clear();
         invalidate();
     }
 
     public void setCurrentPainType(int painTypeResId) {
         currentPainType = getResources().getString(painTypeResId);
-        updatePaintStyle(currentPainType);
+        updatePaintStyle(currentPaint, currentPainType);
     }
 
-    private void updatePaintStyle(String painType) {
+    private void updatePaintStyle(Paint paint, String painType) {
         if (painType.equals(getResources().getString(R.string.pain_type_1))) {
             // Type 1: Yellow spiked line
             paint.setColor(Color.YELLOW);
@@ -116,6 +135,14 @@ public class ViewPainDrag extends View {
             paint.setColor(Color.TRANSPARENT); // Transparent to make it invisible
             paint.setPathEffect(null);
         }
+    }
+
+    private Paint createPaintForPainType(String painType) {
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(45f);
+        updatePaintStyle(paint, painType);
+        return paint;
     }
 
     public List<PainInfo> getPainInfoList() {
