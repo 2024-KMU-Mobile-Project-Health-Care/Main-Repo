@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="1"
+    android:rowCount="2"
+    tools:context=".PainGUI">
+
+    <Button
+        android:id="@+id/btn_pain_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:text="고통입력▼" />
+
+    <LinearLayout
+        android:id="@+id/layout_pain_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:background="@color/teal_200"
+        android:orientation="vertical">
+
+        <com.example.healthcareproject.ViewPainDrag
+            android:id="@+id/view_pain_drag"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:gravity="center">
+            <Button
+                android:id="@+id/btn_pain_type1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="고통 유형 1"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <Button
+                android:id="@+id/btn_pain_type2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="고통 유형 2"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <Button
+                android:id="@+id/btn_pain_type3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="고통 유형 3"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="점"/>
+
+            <Switch
+                android:id="@+id/switch_dot_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:thumbTint="@color/switch_dot_color"
+                android:trackTint="@color/switch_line_color"
+                android:thumbTintMode="src_in"
+                android:trackTintMode="src_in" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="선"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end">
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="저장하기"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</GridLayout>
