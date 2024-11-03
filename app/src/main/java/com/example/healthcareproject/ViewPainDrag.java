@@ -121,7 +121,7 @@ public class ViewPainDrag extends View {
         if (painType.equals(getResources().getString(R.string.pain_type_1))) {
             // Type 1: Yellow spiked line
             paint.setColor(Color.YELLOW);
-            paint.setPathEffect(new DashPathEffect(new float[]{15, 5, 5, 5}, 0)); // Spiked effect
+            paint.setPathEffect(new DashPathEffect(new float[]{15, 5}, 0)); // Spiked effect
         } else if (painType.equals(getResources().getString(R.string.pain_type_2))) {
             // Type 2: Gray dotted line
             paint.setColor(Color.GRAY);
@@ -129,6 +129,7 @@ public class ViewPainDrag extends View {
         } else if (painType.equals(getResources().getString(R.string.pain_type_3))) {
             // Type 3: Red smooth line
             paint.setColor(Color.RED);
+            paint.setStrokeCap(Paint.Cap.ROUND);
             paint.setPathEffect(null); // Smooth line
         } else {
             // Default (Disabled or any other unknown type)
