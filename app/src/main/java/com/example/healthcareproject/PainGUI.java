@@ -50,8 +50,10 @@ public class PainGUI extends AppCompatActivity {
             //setText(▲▼)
             public void onClick(View v) {
                 if (isExpanded) {
+                    btnPainInput.setText("고통입력▲");
                     collapseLayout();
                 } else {
+                    btnPainInput.setText("고통입력▼");
                     expandLayout();
                 }
                 isExpanded = !isExpanded;
