@@ -36,37 +36,72 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="4dp"
+            android:padding="10dp"
             android:gravity="center">
-            <Button
-                android:id="@+id/btn_pain_type1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="고통 유형 1"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
 
-            <Button
-                android:id="@+id/btn_pain_type2"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="고통 유형 2"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp">
+                <ImageButton
+                    android:id="@+id/btn_pain_type1"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/pain_stabbing"
+                    android:background="@color/teal_200"
+                    android:contentDescription="@string/pain_type_1" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pain_type_1"
+                    android:gravity="center" />
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_pain_type3"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="고통 유형 3"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp">
+                <ImageButton
+                    android:id="@+id/btn_pain_type2"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/pain_heavy"
+                    android:background="@color/teal_200"
+                    android:contentDescription="@string/pain_type_2" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pain_type_2"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp">
+                <ImageButton
+                    android:id="@+id/btn_pain_type3"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/pain_throbbing"
+                    android:background="@color/teal_200"
+                    android:contentDescription="@string/pain_type_3" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pain_type_3"
+                    android:gravity="center" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

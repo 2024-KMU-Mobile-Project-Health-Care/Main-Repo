@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
@@ -25,9 +26,9 @@ public class PainGUI extends AppCompatActivity {
     private boolean isExpanded = true;
     private boolean isAnimating = false;
     Button btnPainInput;
-    Button btnPainType1;
-    Button btnPainType2;
-    Button btnPainType3;
+    ImageButton btnPainType1;
+    ImageButton btnPainType2;
+    ImageButton btnPainType3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class PainGUI extends AppCompatActivity {
         btnPainType1.performClick(); // 자동으로 PainType1으로 시작하게끔 설정
     }
 
-    private void setPainTypeBtnActive(Button selectedButton, Button otherButton1, Button otherButton2) {
+    private void setPainTypeBtnActive(ImageButton selectedButton, ImageButton otherButton1, ImageButton otherButton2) {
         // Disable the selected button and enable the other buttons
         selectedButton.setEnabled(false);
         otherButton1.setEnabled(true);
