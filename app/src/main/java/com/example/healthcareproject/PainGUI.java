@@ -1,6 +1,5 @@
 package com.example.healthcareproject;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -44,44 +43,47 @@ public class PainGUI extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        btnPainInput = (Button) findViewById(R.id.btn_pain_input);
-        btnPainInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            //setText(▲▼)
-            public void onClick(View v) {
-                if (isExpanded) {
-                    btnPainInput.setText("고통입력▲");
-                    collapseLayout();
-                } else {
-                    btnPainInput.setText("고통입력▼");
-                    expandLayout();
-                }
-                isExpanded = !isExpanded;
-                new Handler(Looper.getMainLooper()).postDelayed(() -> isAnimating = false, 300);
+
+        // Handle the expand/collapse of layout
+        btnPainInput = findViewById(R.id.btn_pain_input);
+        btnPainInput.setOnClickListener(v -> {
+            if (isExpanded) {
+                btnPainInput.setText("고통입력▲");
+                collapseLayout();
+            } else {
+                btnPainInput.setText("고통입력▼");
+                expandLayout();
             }
-        });
-        btnPainType1 = (Button) findViewById(R.id.btn_pain_type1);
-        btnPainType1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //draw 타입 변경
-            }
-        });
-        btnPainType2 = (Button) findViewById(R.id.btn_pain_type2);
-        btnPainType2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //draw 타입 변경
-            }
-        });
-        btnPainType3 = (Button) findViewById(R.id.btn_pain_type3);
-        btnPainType3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //draw 타입 변경
-            }
+            isExpanded = !isExpanded;
+            new Handler(Looper.getMainLooper()).postDelayed(() -> isAnimating = false, 300);
         });
 
+        // Set up button listeners for pain types
+        btnPainType1 = findViewById(R.id.btn_pain_type1);
+        btnPainType1.setOnClickListener(v -> {
+            viewPainDrag.setCurrentPainType(R.string.pain_type_1);
+            setPainTypeBtnActive(btnPainType1, btnPainType2, btnPainType3);
+        });
+
+        btnPainType2 = findViewById(R.id.btn_pain_type2);
+        btnPainType2.setOnClickListener(v -> {
+            viewPainDrag.setCurrentPainType(R.string.pain_type_2);
+            setPainTypeBtnActive(btnPainType2, btnPainType1, btnPainType3);
+        });
+
+        btnPainType3 = findViewById(R.id.btn_pain_type3);
+        btnPainType3.setOnClickListener(v -> {
+            viewPainDrag.setCurrentPainType(R.string.pain_type_3);
+            setPainTypeBtnActive(btnPainType3, btnPainType1, btnPainType2);
+        });
+        btnPainType1.performClick(); // 자동으로 PainType1으로 시작하게끔 설정
+    }
+
+    private void setPainTypeBtnActive(Button selectedButton, Button otherButton1, Button otherButton2) {
+        // Disable the selected button and enable the other buttons
+        selectedButton.setEnabled(false);
+        otherButton1.setEnabled(true);
+        otherButton2.setEnabled(true);
     }
 
     private void expandLayout() {
