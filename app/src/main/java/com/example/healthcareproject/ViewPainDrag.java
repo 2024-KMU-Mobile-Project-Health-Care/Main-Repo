@@ -12,6 +12,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
 요구사항
 1. 그리기 모드 버튼
@@ -26,6 +29,9 @@ public class ViewPainDrag extends View {
     private Paint paint;
     private Path path;
     private Bitmap background;
+    private List<PainInfo> painInfoList;
+    private PainInfo currentPainInfo;
+    private String currentPainType;
     // 회색 점선
     // 빨간색 둥근 선
     // 노란색 뾰족선
@@ -41,6 +47,9 @@ public class ViewPainDrag extends View {
         paint.setStrokeWidth(25f);
 
         path = new Path();
+        painInfoList = new ArrayList<>();
+        currentPainType = getResources().getString(R.string.pain_type_0);
+
         // 배경 이미지 초기화 (drawable 리소스를 배경으로 설정)
         Bitmap originalBackground = BitmapFactory.decodeResource(getResources(), R.drawable.body_back);
         // 화면 너비에 맞게 배경 이미지 크기 조정
@@ -53,12 +62,10 @@ public class ViewPainDrag extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         // 배경 이미지 그리기
         if (background != null) {
             canvas.drawBitmap(background, 0, 0, null);
         }
-
         // 드래그 경로 그리기
         canvas.drawPath(path, paint);
     }
@@ -71,14 +78,22 @@ public class ViewPainDrag extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);
+                currentPainInfo = new PainInfo(currentPainType);
+                currentPainInfo.addCoordinate(x, y);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 path.lineTo(x, y);
+                if (currentPainInfo != null) {
+                    currentPainInfo.addCoordinate(x, y);
+                }
                 break;
             case MotionEvent.ACTION_UP:
+                if (currentPainInfo != null) {
+                    painInfoList.add(currentPainInfo);
+                    currentPainInfo = null;
+                }
                 break;
         }
-
         invalidate();
         return true;
     }
@@ -86,5 +101,13 @@ public class ViewPainDrag extends View {
     public void clearPath() {
         path.reset();
         invalidate();
+    }
+
+    public void setCurrentPainType(int painTypeResId) {
+        currentPainType = getResources().getString(painTypeResId);
+    }
+
+    public List<PainInfo> getPainInfoList() {
+        return painInfoList;
     }
 }
