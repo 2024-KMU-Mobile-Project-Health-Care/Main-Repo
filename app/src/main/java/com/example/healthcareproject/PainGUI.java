@@ -26,6 +26,7 @@ public class PainGUI extends AppCompatActivity {
     private boolean isExpanded = true;
     private boolean isAnimating = false;
     Button btnPainInput;
+    Button btnSave;
     ImageButton btnPainType1;
     ImageButton btnPainType2;
     ImageButton btnPainType3;
@@ -57,6 +58,11 @@ public class PainGUI extends AppCompatActivity {
             }
             isExpanded = !isExpanded;
             new Handler(Looper.getMainLooper()).postDelayed(() -> isAnimating = false, 300);
+        });
+
+        btnSave = findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(v -> {
+
         });
 
         // Set up button listeners for pain types
