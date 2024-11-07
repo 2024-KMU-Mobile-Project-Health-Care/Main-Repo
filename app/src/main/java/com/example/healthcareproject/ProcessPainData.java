@@ -2,8 +2,10 @@ package com.example.healthcareproject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ProcessPainData {
     private static final Map<String, int[]> regions = new HashMap<String, int[]>() {{
@@ -29,6 +31,8 @@ public class ProcessPainData {
     }};
 
     public static List<Map<String, String>> processPainData(List<PainInfo> painInfoList, String timeStamp) {
+        // 중복 제거를 위해 Set 사용
+        Set<String> uniquePainDataSet = new HashSet<>();
         List<Map<String, String>> painDataList = new ArrayList<>();
 
         for (PainInfo painInfo : painInfoList) {
@@ -38,12 +42,18 @@ public class ProcessPainData {
             for (float[] coordinate : coordinates) {
                 String closestRegion = findClosestRegion(coordinate[0], coordinate[1]);
 
-                Map<String, String> painData = new HashMap<>();
-                painData.put("painLocation", closestRegion);
-                painData.put("painStartTime", timeStamp);
-                painData.put("painType", painType);
+                // 고유 키 생성: "location|type" 형식
+                String uniqueKey = closestRegion + "|" + painType;
 
-                painDataList.add(painData);
+                // 중복되지 않는 경우에만 추가
+                if (uniquePainDataSet.add(uniqueKey)) {
+                    Map<String, String> painData = new HashMap<>();
+                    painData.put("painLocation", closestRegion);
+                    painData.put("painStartTime", timeStamp);
+                    painData.put("painType", painType);
+
+                    painDataList.add(painData);
+                }
             }
         }
 
@@ -69,6 +79,7 @@ public class ProcessPainData {
         }
         return closestRegion;
     }
+
     // 영역의 중심과 좌표 간의 거리 계산
     private static double calculateDistance(float x, float y, int[] bounds) {
         float centerX = (bounds[0] + bounds[2]) / 2f;
