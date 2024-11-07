@@ -66,6 +66,7 @@ public class PainGUI extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(v -> {
             List<PainInfo> painInfoList = viewPainDrag.getPainInfoList();
+            viewPainDrag.clearPath();
             for (PainInfo painInfo : painInfoList) {
                 String painType = painInfo.getPainType();
                 List<float[]> coordinates = painInfo.getCoordinates();
