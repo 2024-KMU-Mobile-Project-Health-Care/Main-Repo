@@ -32,6 +32,7 @@ public class PainGUI extends AppCompatActivity {
     private boolean isAnimating = false;
     Button btnPainInput;
     Button btnSave;
+    Button btnErase;
     ImageButton btnPainType1;
     ImageButton btnPainType2;
     ImageButton btnPainType3;
@@ -74,6 +75,11 @@ public class PainGUI extends AppCompatActivity {
                 String painType = painInfo.getPainType();
                 List<float[]> coordinates = painInfo.getCoordinates();
             }
+        });
+
+        btnErase = findViewById(R.id.btnErase);
+        btnErase.setOnClickListener(v -> {
+            
         });
 
         // Set up button listeners for pain types
