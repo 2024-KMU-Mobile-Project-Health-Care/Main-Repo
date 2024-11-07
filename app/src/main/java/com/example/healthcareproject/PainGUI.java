@@ -18,6 +18,8 @@ import android.os.Looper;
 import java.util.ArrayList;
 import java.util.List;
 import android.util.Log;
+import android.widget.Toast;
+
 /*
 설명할 거
 UI를 접고 펼 수 있게 설정한 것
@@ -67,6 +69,7 @@ public class PainGUI extends AppCompatActivity {
         btnSave.setOnClickListener(v -> {
             List<PainInfo> painInfoList = viewPainDrag.getPainInfoList();
             viewPainDrag.clearPath();
+            Toast.makeText(PainGUI.this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
             for (PainInfo painInfo : painInfoList) {
                 String painType = painInfo.getPainType();
                 List<float[]> coordinates = painInfo.getCoordinates();
