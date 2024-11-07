@@ -47,6 +47,10 @@ public class PainGUI extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_pain_gui);
 
+        PainDatabaseHelper dbHelper = new PainDatabaseHelper(this); // for debugging
+        dbHelper.deleteAllPainInfo(); // for debugging
+
+
         viewPainDrag = findViewById(R.id.view_pain_drag);
         layoutPainDetails = findViewById(R.id.layout_pain_details);
 
@@ -79,6 +83,15 @@ public class PainGUI extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
             String timeStamp = timeFormatter.format(calendar.getTime());
             List<Map<String, String>> processedPainData = ProcessPainData.processPainData(painInfoList, timeStamp);
+
+            //PainDatabaseHelper dbHelper = new PainDatabaseHelper(PainGUI.this);
+            for (Map<String, String> painData : processedPainData) {
+                String location = painData.get("painLocation");
+                String painType = painData.get("painType");
+                dbHelper.insertPainInfo(location, timeStamp, painType);
+            }
+            
+            dbHelper.close();
             viewPainDrag.clearPath();
         });
 
