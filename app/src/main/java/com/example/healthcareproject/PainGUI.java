@@ -21,6 +21,7 @@ import android.util.Log;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Map;
 
 
 /*
@@ -78,6 +79,7 @@ public class PainGUI extends AppCompatActivity {
             SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Calendar calendar = Calendar.getInstance();
             String timeStamp = timeFormatter.format(calendar.getTime());
+            List<Map<String, String>> processedPainData = ProcessPainData.processPainData(painInfoList, timeStamp);
         });
 
         btnErase = findViewById(R.id.btnErase);
