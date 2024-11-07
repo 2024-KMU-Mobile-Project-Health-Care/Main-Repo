@@ -66,8 +66,6 @@ public class PainGUI extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(v -> {
             List<PainInfo> painInfoList = viewPainDrag.getPainInfoList();
-            // 가져온 painInfoList를 활용하여 필요한 로직 수행
-            // 예: Log로 정보 출력하기
             for (PainInfo painInfo : painInfoList) {
                 String painType = painInfo.getPainType();
                 List<float[]> coordinates = painInfo.getCoordinates();
