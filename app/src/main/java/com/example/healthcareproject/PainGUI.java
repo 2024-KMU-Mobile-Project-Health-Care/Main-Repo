@@ -15,6 +15,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.os.Handler;
 import android.os.Looper;
+import java.util.ArrayList;
+import java.util.List;
+import android.util.Log;
 /*
 설명할 거
 UI를 접고 펼 수 있게 설정한 것
@@ -62,7 +65,13 @@ public class PainGUI extends AppCompatActivity {
 
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(v -> {
-
+            List<PainInfo> painInfoList = viewPainDrag.getPainInfoList();
+            // 가져온 painInfoList를 활용하여 필요한 로직 수행
+            // 예: Log로 정보 출력하기
+            for (PainInfo painInfo : painInfoList) {
+                String painType = painInfo.getPainType();
+                List<float[]> coordinates = painInfo.getCoordinates();
+            }
         });
 
         // Set up button listeners for pain types
