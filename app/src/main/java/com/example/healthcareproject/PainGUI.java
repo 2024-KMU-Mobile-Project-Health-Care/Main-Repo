@@ -79,7 +79,7 @@ public class PainGUI extends AppCompatActivity {
 
         btnErase = findViewById(R.id.btnErase);
         btnErase.setOnClickListener(v -> {
-            
+            viewPainDrag.clearPath();
         });
 
         // Set up button listeners for pain types
