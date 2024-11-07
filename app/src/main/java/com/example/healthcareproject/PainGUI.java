@@ -73,13 +73,13 @@ public class PainGUI extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(v -> {
             List<PainInfo> painInfoList = viewPainDrag.getPainInfoList();
-            viewPainDrag.clearPath();
             Toast.makeText(PainGUI.this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
 
             SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Calendar calendar = Calendar.getInstance();
             String timeStamp = timeFormatter.format(calendar.getTime());
             List<Map<String, String>> processedPainData = ProcessPainData.processPainData(painInfoList, timeStamp);
+            viewPainDrag.clearPath();
         });
 
         btnErase = findViewById(R.id.btnErase);
