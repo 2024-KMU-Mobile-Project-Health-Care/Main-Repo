@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import android.util.Log;
 import android.widget.Toast;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 
 /*
 설명할 거
@@ -71,10 +74,10 @@ public class PainGUI extends AppCompatActivity {
             List<PainInfo> painInfoList = viewPainDrag.getPainInfoList();
             viewPainDrag.clearPath();
             Toast.makeText(PainGUI.this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
-            for (PainInfo painInfo : painInfoList) {
-                String painType = painInfo.getPainType();
-                List<float[]> coordinates = painInfo.getCoordinates();
-            }
+
+            SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Calendar calendar = Calendar.getInstance();
+            String timeStamp = timeFormatter.format(calendar.getTime());
         });
 
         btnErase = findViewById(R.id.btnErase);
