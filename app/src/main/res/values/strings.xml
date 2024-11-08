@@ -1,13 +1,14 @@
 <resources>
     <string name="app_name">HealthCareProject</string>
     <string name="pain_gui">pain_gui</string>
+    <string name="ai_summation">ai_summation</string>
     <string name="pain_type_0">비활성화</string>
     <string name="pain_type_1">찌름</string>
     <string name="pain_type_2">무게감</string>
     <string name="pain_type_3">욱씬</string>
 </resources>
 
-<!-->
+    <!-->
   찌름 - STING
   무게감 - HEAVY
   욱씬 - THROB
