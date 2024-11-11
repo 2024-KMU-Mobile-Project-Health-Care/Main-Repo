@@ -22,6 +22,7 @@ import com.example.healthcareproject.aiModel.RetrofitClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +38,8 @@ public class AiSummationActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_ai_summation);
 
+        PainDatabaseHelper painInfo = new PainDatabaseHelper(getApplicationContext());
+
         btnAiProcess = (Button) findViewById(R.id.btn_ai_process);
         etAiInput = (EditText) findViewById(R.id.et_ai_input);
         tvAiResult = (TextView) findViewById(R.id.tv_ai_result);
@@ -50,7 +53,7 @@ public class AiSummationActivity extends AppCompatActivity {
         btnAiProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputText = etAiInput.getText().toString();
+                String inputText = painInfo.getAllPainInfo().toString();
                 if(!inputText.isEmpty()){
                     sendValueToAi(inputText);
                 }
