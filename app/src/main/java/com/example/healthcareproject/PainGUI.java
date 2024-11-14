@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -37,6 +38,7 @@ public class PainGUI extends AppCompatActivity {
     private ViewPainDrag viewPainDrag;
     private LinearLayout layoutPainIntensity;
     private LinearLayout layoutPainDetails;
+    private GridLayout layoutPainDrag;
     private boolean isExpanded = true;
     private boolean isAnimating = false;
     Button btnPainInput;
@@ -58,6 +60,7 @@ public class PainGUI extends AppCompatActivity {
         viewPainDrag = findViewById(R.id.view_pain_drag);
         layoutPainIntensity = findViewById(R.id.layout_pain_intensity);
         layoutPainDetails = findViewById(R.id.layout_pain_details);
+        layoutPainDrag = findViewById(R.id.layout_pain_drag_grid);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -82,25 +85,35 @@ public class PainGUI extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(v -> {
             List<PainInfo> painInfoList = viewPainDrag.getPainInfoList();
-            Toast.makeText(PainGUI.this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
-
-            SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Calendar calendar = Calendar.getInstance();
-            String timeStamp = timeFormatter.format(calendar.getTime());
-            List<Map<String, String>> processedPainData = ProcessPainData.processPainData(painInfoList, timeStamp);
-
-            //PainDatabaseHelper dbHelper = new PainDatabaseHelper(PainGUI.this);
-            for (Map<String, String> painData : processedPainData) {
-                String location = painData.get("painLocation");
-                String painType = painData.get("painType");
-                dbHelper.insertPainInfo(location, timeStamp, painType);
+            if (btnSave.getText().equals("다음으로")){
+                if (painInfoList == null || painInfoList.isEmpty()) {
+                    Toast.makeText(PainGUI.this, "저장할 정보가 없습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                layoutPainDrag.setVisibility(View.GONE);
+                layoutPainIntensity.setVisibility(View.VISIBLE);
+                btnSave.setText("저장하기");
             }
-            
-            dbHelper.close();
-            viewPainDrag.clearPath();
+            else if (btnSave.getText().equals("저장하기")){
+                Toast.makeText(PainGUI.this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+                SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Calendar calendar = Calendar.getInstance();
+                String timeStamp = timeFormatter.format(calendar.getTime());
+                List<Map<String, String>> processedPainData = ProcessPainData.processPainData(painInfoList, timeStamp);
 
-            layoutPainDetails .setVisibility(View.GONE);
-            layoutPainIntensity.setVisibility(View.VISIBLE);
+                //PainDatabaseHelper dbHelper = new PainDatabaseHelper(PainGUI.this);
+                for (Map<String, String> painData : processedPainData) {
+                    String location = painData.get("painLocation");
+                    String painType = painData.get("painType");
+                    dbHelper.insertPainInfo(location, timeStamp, painType);
+                }
+
+                dbHelper.close();
+                viewPainDrag.clearPath();
+                layoutPainDrag.setVisibility(View.VISIBLE);
+                layoutPainIntensity.setVisibility(View.GONE);
+                btnSave.setText("다음으로");
+            }
         });
 
         btnErase = findViewById(R.id.btnErase);
