@@ -23,6 +23,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
+import com.example.healthcareproject.ViewPainDrag;
+import com.example.healthcareproject.PainDatabaseHelper;
+import com.example.healthcareproject.PainInfo;
+import com.example.healthcareproject.ProcessPainData;
 
 /*
 설명할 거
