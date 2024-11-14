@@ -35,6 +35,7 @@ UI를 접고 펼 수 있게 설정한 것
  */
 public class PainGUI extends AppCompatActivity {
     private ViewPainDrag viewPainDrag;
+    private LinearLayout layoutPainIntensity;
     private LinearLayout layoutPainDetails;
     private boolean isExpanded = true;
     private boolean isAnimating = false;
@@ -54,8 +55,8 @@ public class PainGUI extends AppCompatActivity {
         PainDatabaseHelper dbHelper = new PainDatabaseHelper(this); // for debugging
         dbHelper.deleteAllPainInfo(); // for debugging
 
-
         viewPainDrag = findViewById(R.id.view_pain_drag);
+        layoutPainIntensity = findViewById(R.id.layout_pain_intensity);
         layoutPainDetails = findViewById(R.id.layout_pain_details);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -97,6 +98,9 @@ public class PainGUI extends AppCompatActivity {
             
             dbHelper.close();
             viewPainDrag.clearPath();
+
+            layoutPainDetails .setVisibility(View.GONE);
+            layoutPainIntensity.setVisibility(View.VISIBLE);
         });
 
         btnErase = findViewById(R.id.btnErase);
