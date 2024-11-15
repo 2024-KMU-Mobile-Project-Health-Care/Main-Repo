@@ -154,15 +154,15 @@
             android:visibility="gone"
             android:padding="16dp">
 
-            <!-- 고통 강도 이미지 -->
             <ImageView
                 android:id="@+id/img_pain_intensity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/pain_intensity0"
-            android:contentDescription="@string/pain_intensity0_desc"
-            android:layout_gravity="center"
-            android:layout_marginBottom="8dp" />
+                android:contentDescription="@string/pain_intensity0_desc"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp" />
 
             <TextView
                 android:id="@+id/txt_pain_intensity_description"
@@ -171,6 +171,7 @@
                 android:text="@string/pain_intensity0_desc"
                 android:textSize="16sp"
                 android:layout_gravity="center"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp" />
 
             <SeekBar
@@ -180,7 +181,8 @@
                 android:max="4"
                 android:progress="0"
                 android:layout_gravity="start"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="0dp"
                 android:thumbTint="@color/black"
                 android:progressTint="@color/black"/>
         </LinearLayout>
