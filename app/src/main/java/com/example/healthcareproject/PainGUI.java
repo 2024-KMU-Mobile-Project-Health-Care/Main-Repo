@@ -11,6 +11,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,11 +36,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
-/*
-설명할 거
-UI를 접고 펼 수 있게 설정한 것
-그 버튼의 클릭 빈도수를 조절한 것
- */
 public class PainGUI extends AppCompatActivity {
     private ViewPainDrag viewPainDrag;
     private LinearLayout layoutPainIntensity;
@@ -64,6 +60,7 @@ public class PainGUI extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.deleteDatabase("PainData.db");
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_pain_gui);
 
@@ -98,6 +95,7 @@ public class PainGUI extends AppCompatActivity {
         layoutPainDrag = findViewById(R.id.layout_pain_drag_grid);
         imgPainIntensity = findViewById(R.id.img_pain_intensity);
         txtPainIntensity = findViewById(R.id.txt_pain_intensity);
+        seekBarPainIntensity = findViewById(R.id.seekbar_pain_intensity);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -143,7 +141,15 @@ public class PainGUI extends AppCompatActivity {
                 for (Map<String, String> painData : processedPainData) {
                     String location = painData.get("painLocation");
                     String painType = painData.get("painType");
-                    dbHelper.insertPainInfo(location, timeStamp, painType);
+                    dbHelper.insertPainInfo(location, timeStamp, painType, seekBarPainIntensity.getProgress());
+                }
+
+                List<Map<String, String>> allPainInfo = dbHelper.getAllPainInfo();
+                for (Map<String, String> painInfo : allPainInfo) {
+                    Log.d("PainInfo", "Location: " + painInfo.get("painLocation")
+                            + ", Time: " + painInfo.get("painStartTime")
+                            + ", Type: " + painInfo.get("painType")
+                            + ", Intensity: " + painInfo.get("painIntensity"));
                 }
 
                 dbHelper.close();
@@ -152,10 +158,10 @@ public class PainGUI extends AppCompatActivity {
                 layoutPainIntensity.setVisibility(View.GONE);
                 btnSave.setText("다음으로");
 
-                seekBarPainIntensity.setProgress(0); // SeekBar를 초기값으로 변경
-                txtPainIntensity.setText(painDesc[0]); // 초기 설명
-                imgPainIntensity.setImageResource(painImages[0]); // 초기 이미지 설정
-                int color = ContextCompat.getColor(PainGUI.this, painColors[0]); // 초기 색상
+                seekBarPainIntensity.setProgress(0);
+                txtPainIntensity.setText(painDesc[0]);
+                imgPainIntensity.setImageResource(painImages[0]);
+                int color = ContextCompat.getColor(PainGUI.this, painColors[0]);
                 seekBarPainIntensity.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
                 seekBarPainIntensity.getThumb().setColorFilter(color, PorterDuff.Mode.SRC_IN);
             }
@@ -186,7 +192,6 @@ public class PainGUI extends AppCompatActivity {
         });
         btnPainType1.performClick(); // 자동으로 PainType1으로 시작하게끔 설정
 
-        seekBarPainIntensity = findViewById(R.id.seekbar_pain_intensity);
         Drawable originalThumb = seekBarPainIntensity.getThumb();
         Drawable enlargedThumb = ContextCompat.getDrawable(this, R.drawable.round_thumb); // 불룩하게 만든 thumb drawable
         seekBarPainIntensity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
