@@ -145,12 +145,45 @@
                     android:gravity="center" />
             </LinearLayout>
         </GridLayout>
+        <!-->400에 35<-->
+        <LinearLayout
+            android:id="@+id/layout_pain_intensity"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="새로운 레이아웃이 나타났습니다"
-            android:visibility="invisible"/>
+            <!-- 고통 강도 이미지 -->
+            <ImageView
+                android:id="@+id/img_pain_intensity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pain_intensity0"
+            android:contentDescription="@string/pain_intensity0_desc"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/txt_pain_intensity_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pain_intensity0_desc"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <SeekBar
+                android:id="@+id/seekbar_pain_intensity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="4"
+                android:progress="0"
+                android:layout_gravity="start"
+                android:layout_marginBottom="8dp"
+                android:thumbTint="@color/black"
+                android:progressTint="@color/black"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -182,15 +215,6 @@
                     android:layout_marginRight="8dp" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_pain_intensity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
     </LinearLayout>
 
 </GridLayout>
