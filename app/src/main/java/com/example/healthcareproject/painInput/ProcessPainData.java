@@ -1,4 +1,4 @@
-package com.example.healthcareproject;
+package com.example.healthcareproject.painInput;
 
 import java.util.ArrayList;
 import java.util.HashMap;
