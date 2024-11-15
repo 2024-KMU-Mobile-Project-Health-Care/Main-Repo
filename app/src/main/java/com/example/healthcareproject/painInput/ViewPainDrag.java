@@ -1,4 +1,4 @@
-package com.example.healthcareproject;
+package com.example.healthcareproject.painInput;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,8 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.example.healthcareproject.R;
 
 import java.util.ArrayList;
 import java.util.List;

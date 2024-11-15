@@ -1,4 +1,4 @@
-package com.example.healthcareproject;
+package com.example.healthcareproject.painInput;
 
 import android.content.ContentValues;
 import android.content.Context;

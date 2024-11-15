@@ -18,6 +18,7 @@ import com.example.healthcareproject.aiModel.AiRequest;
 import com.example.healthcareproject.aiModel.AiResponse;
 import com.example.healthcareproject.aiModel.GPTApiService;
 import com.example.healthcareproject.aiModel.RetrofitClient;
+import com.example.healthcareproject.painInput.PainDatabaseHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;

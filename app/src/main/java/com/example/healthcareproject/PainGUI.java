@@ -16,18 +16,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.os.Handler;
 import android.os.Looper;
-import java.util.ArrayList;
 import java.util.List;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.example.healthcareproject.painInput.PainDatabaseHelper;
+import com.example.healthcareproject.painInput.PainInfo;
+import com.example.healthcareproject.painInput.ProcessPainData;
+import com.example.healthcareproject.painInput.ViewPainDrag;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
-
-import com.example.healthcareproject.ViewPainDrag;
-import com.example.healthcareproject.PainDatabaseHelper;
-import com.example.healthcareproject.PainInfo;
-import com.example.healthcareproject.ProcessPainData;
 
 /*
 설명할 거

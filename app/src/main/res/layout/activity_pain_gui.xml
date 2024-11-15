@@ -36,7 +36,7 @@
             android:columnCount="4">
 
             <!-- ViewPainDrag: 첫 번째 행의 전체 4칸을 차지 -->
-            <com.example.healthcareproject.ViewPainDrag
+            <com.example.healthcareproject.painInput.ViewPainDrag
                 android:id="@+id/view_pain_drag"
                 android:layout_width="0dp"
                 android:layout_height="400dp"
