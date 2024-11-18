@@ -6,6 +6,11 @@
     <string name="pain_type_1">찌름</string>
     <string name="pain_type_2">무게감</string>
     <string name="pain_type_3">욱씬</string>
+    <string name="pain_intensity0_desc">아프지 않아요</string>
+    <string name="pain_intensity1_desc">아프지만 일상생활에 지장이 없어요</string>
+    <string name="pain_intensity2_desc">큰 동작을 하면 불편해요</string>
+    <string name="pain_intensity3_desc">작은 동작에도 통증이 느껴져요</string>
+    <string name="pain_intensity4_desc">항상 큰 통증이 느껴져요</string>
 </resources>
 
     <!-->

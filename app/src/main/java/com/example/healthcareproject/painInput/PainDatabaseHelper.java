@@ -23,6 +23,7 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_LOCATION = "location";
     private static final String COLUMN_TIMESTAMP = "timestamp";
     private static final String COLUMN_PAIN_TYPE = "painType";
+    private static final String COLUMN_PAIN_INTENSITY = "painIntensity";
 
     public PainDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,7 +35,8 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_LOCATION + " TEXT, "
                 + COLUMN_TIMESTAMP + " TEXT, "
-                + COLUMN_PAIN_TYPE + " TEXT)";
+                + COLUMN_PAIN_TYPE + " TEXT, "
+                + COLUMN_PAIN_INTENSITY + " INTEGER)";
         db.execSQL(CREATE_TABLE);
     }
 
@@ -45,12 +47,13 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // 데이터 삽입 메서드
-    public void insertPainInfo(String location, String timestamp, String painType) {
+    public void insertPainInfo(String location, String timestamp, String painType, int painIntensity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_LOCATION, location);
         values.put(COLUMN_TIMESTAMP, timestamp);
         values.put(COLUMN_PAIN_TYPE, painType);
+        values.put(COLUMN_PAIN_INTENSITY, painIntensity);
 
         db.insert(TABLE_NAME, null, values);
         db.close();
@@ -66,6 +69,7 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
             int locationIndex = cursor.getColumnIndex(COLUMN_LOCATION);
             int timestampIndex = cursor.getColumnIndex(COLUMN_TIMESTAMP);
             int painTypeIndex = cursor.getColumnIndex(COLUMN_PAIN_TYPE);
+            int painIntensityIndex = cursor.getColumnIndex(COLUMN_PAIN_INTENSITY);
 
             if (locationIndex == -1 || timestampIndex == -1 || painTypeIndex == -1) {
                 Log.e("DatabaseError", "One or more columns are missing in the database.");
@@ -75,6 +79,7 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
                     painInfo.put("painLocation", cursor.getString(locationIndex));
                     painInfo.put("painStartTime", cursor.getString(timestampIndex));
                     painInfo.put("painType", cursor.getString(painTypeIndex));
+                    painInfo.put("painIntensity", cursor.getString(painIntensityIndex));
                     painInfoList.add(painInfo);
                 } while (cursor.moveToNext());
             }

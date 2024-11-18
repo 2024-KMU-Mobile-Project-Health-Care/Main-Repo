@@ -9,4 +9,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="switch_dot_color">#FF808080</color>
     <color name="switch_line_color">#FF808080</color>
+
+    <color name="blue">#FF0000FF</color>
+    <color name="green">#FF32CD32</color>
+    <color name="yellow">#FFFFD700</color>
+    <color name="orange">#FF8C00</color>
+    <color name="red">#FFFF0000</color>
 </resources>
