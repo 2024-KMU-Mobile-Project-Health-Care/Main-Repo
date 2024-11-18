@@ -79,7 +79,13 @@ public class AiSummationActivity extends AppCompatActivity {
                 List<Map<String, String>> allPainInfo = painDBHelper.getAllPainInfo();
                 Toast.makeText(getApplicationContext(), "답변을 생성하는 중입니다. 잠시 기다려 주세요.", Toast.LENGTH_LONG).show();
                 if(!allPainInfo.isEmpty()){
-                    unifiedAiCall(allPainInfo);
+                    unifiedAiCall(allPainInfo); // AI 호출
+
+                    // 테스트용 코드 ~
+                    Set<String> temp = getAllPainSet(allPainInfo);
+                    Map<String, String> test = choicePainInfo(allPainInfo, temp);
+                    tvAiResult.setText(test.toString());
+                    // ~ 테스트용 코드
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "저장된 증상이 없습니다. 증상을 먼저 입력해 주세요.", Toast.LENGTH_LONG).show();
@@ -104,7 +110,7 @@ public class AiSummationActivity extends AppCompatActivity {
                     else{
                         result.append("&");
                     }
-                    result.append(painInfo.get("painStartTime")).append(", ").append(painInfo.get("painType"));
+                    result.append(painInfo.get("painIntensity")).append(", ").append(painInfo.get("painType")).append(", ").append(painInfo.get("painStartTime"));
                 }
             }
             result.append("]");
@@ -142,13 +148,13 @@ public class AiSummationActivity extends AppCompatActivity {
     // 메인 쓰레드에서 호출 할 수 없음!!
     String textSummationAi(String value){
         String systemContent = "당신은 전문적인 의료 어시스턴트입니다. " +
-                "환자의 상태 정보를 읽고, 각 통증 위치별로 주요 증상과 필요한 임상 정보를 중심으로 간결하게 요약해 주세요. " +
-                "이 요약은 의사가 빠르게 파악하고 진료에 활용할 수 있도록 작성하고, 각각의 통증 위치는 개별 단락으로 분류해 주세요. " +
-                "각 통증 위치별로 다음 형식을 따라 요약해 주세요:\n" +
+                "환자의 상태 정보를 읽고, 주요 증상과 필요한 임상 정보를 중심으로 간결하게 요약해 주세요. " +
+                "다음 형식을 따라 요약해 주세요:\n" +
                 "1. 통증 위치 (예: '오른쪽 어깨')\n" +
-                "2. 주요 증상 (예: '통증 강도: 중간 ~ 강 (악화 혹은 완화)', '통증 종류: 욱신거림')\n" +
-                "3. 증상 발생 시각 (예: '2024.11.1 ~ 2024.11.5')\n" +
-                "4. 기타 증상(예: '부기 (2024.11.3), 발열 (2024.11.5)')\n" +
+                "2. 통증 강도: (0-통증 없음, 1-약함, 2-중간, 3-강함 4-매우 강함, 예: 중간 ~ 강 (악화 혹은 완화))" +
+                "3. 통증 종류: (예: 욱신거림)\n" +
+                "4. 증상 발생 시각 (예: '2024.11.1 ~ 2024.11.5')\n" +
+                "5. 기타 증상(예: '부기 (2024.11.3), 발열 (2024.11.5)')\n" +
                 "입력된 내용 외에 새로운 통증 위치나 증상을 절대 생성하지 마세요. " +
                 "스스로 판단한 의학적 소견은 절대 작성하지 마세요. " +
                 "한국어를 사용하고, Markdown 문법은 사용하지 마세요.";
