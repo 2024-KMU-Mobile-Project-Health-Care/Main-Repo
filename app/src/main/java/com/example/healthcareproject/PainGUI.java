@@ -21,6 +21,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.os.Handler;
 import android.os.Looper;
+
+import java.util.Collections;
 import java.util.List;
 
 import android.widget.SeekBar;
@@ -232,4 +234,41 @@ public class PainGUI extends AppCompatActivity {
         layoutPainDetails.startAnimation(slideUp);
         layoutPainDetails.setVisibility(View.GONE);
     }
+
+    private void loadAndShowPain(int painNum) {
+        PainDatabaseHelper dbHelper = new PainDatabaseHelper(this);
+
+        List<Map<String, String>> allPainInfo = dbHelper.getAllPainInfo();
+
+        Collections.sort(allPainInfo, (pain1, pain2) -> {
+            String time1 = pain1.get("painStartTime");
+            String time2 = pain2.get("painStartTime");
+            return time2.compareTo(time1); // 시간 내림차순 정렬
+        });
+
+        int dataCount = Math.min(painNum, allPainInfo.size());
+
+        LinearLayout painDataContainer = findViewById(R.id.pain_data_container);
+        for (int i = 0; i < dataCount; i++) {
+            Map<String, String> painInfo = allPainInfo.get(i);
+
+            // 새로운 뷰 생성 및 데이터 설정
+            View painDataView = getLayoutInflater().inflate(R.layout.pain_data_item, null);
+            TextView locationText = painDataView.findViewById(R.id.txt_pain_location);
+            TextView timeText = painDataView.findViewById(R.id.txt_pain_time);
+            TextView typeText = painDataView.findViewById(R.id.txt_pain_type);
+            TextView intensityText = painDataView.findViewById(R.id.txt_pain_intensity);
+
+            locationText.setText(painInfo.get("painLocation"));
+            timeText.setText(painInfo.get("painStartTime"));
+            typeText.setText(painInfo.get("painType"));
+            intensityText.setText(painInfo.get("painIntensity"));
+
+            // 컨테이너에 추가
+            painDataContainer.addView(painDataView);
+        }
+
+        dbHelper.close();
+    }
+
 }
