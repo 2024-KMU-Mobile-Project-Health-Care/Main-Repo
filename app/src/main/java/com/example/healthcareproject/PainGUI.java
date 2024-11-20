@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,9 @@ import com.example.healthcareproject.painInput.ViewPainDrag;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
-
+//painDataContainer UI 구성
+//중복 reload방지, 없으면 예외처리
+//점/선 구현
 public class PainGUI extends AppCompatActivity {
     private ViewPainDrag viewPainDrag;
     private LinearLayout layoutPainIntensity;
@@ -56,7 +59,9 @@ public class PainGUI extends AppCompatActivity {
     ImageView imgPainIntensity;
     TextView txtPainIntensity;
     SeekBar seekBarPainIntensity;
-    private ImageButton btnReload;
+    ImageButton btnReload;
+
+    Switch switchDotLine;
 
     private String[] painDesc;
     private int[] painImages;
@@ -220,6 +225,11 @@ public class PainGUI extends AppCompatActivity {
         btnReload = findViewById(R.id.btn_reload);
         btnReload.setOnClickListener(v -> {
             loadAndShowPain(2);
+        });
+
+        switchDotLine = findViewById(R.id.switch_dot_line);
+        switchDotLine.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            viewPainDrag.setCurrentSwitchMode(isChecked);
         });
 
     }

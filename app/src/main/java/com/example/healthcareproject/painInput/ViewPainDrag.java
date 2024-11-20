@@ -11,6 +11,7 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Switch;
 
 import com.example.healthcareproject.R;
 
@@ -24,6 +25,7 @@ public class ViewPainDrag extends View {
     private List<PainInfo> painInfoList;
     private PainInfo currentPainInfo;
     private String currentPainType;
+    private boolean isLineMode;
 
     public ViewPainDrag(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,8 +56,6 @@ public class ViewPainDrag extends View {
         if (background != null) {
             canvas.drawBitmap(background, 0, 0, null);
         }
-
-        // Draw each PainInfo path with its specific paint style
         for (PainInfo painInfo : painInfoList) {
             Paint paint = createPaintForPainType(painInfo.getPainType());
             Path path = new Path();
@@ -70,8 +70,6 @@ public class ViewPainDrag extends View {
 
             canvas.drawPath(path, paint);
         }
-
-        // Draw the current path
         canvas.drawPath(currentPath, currentPaint);
     }
 
@@ -79,30 +77,30 @@ public class ViewPainDrag extends View {
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (currentPainType.equals(getResources().getString(R.string.pain_type_0))) {
-                    // Disable drawing if pain type is "비활성화"
-                    return false;
-                }
-                currentPath.moveTo(x, y);
-                currentPainInfo = new PainInfo(currentPainType);
-                currentPainInfo.addCoordinate(x, y);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                currentPath.lineTo(x, y);
-                if (currentPainInfo != null) {
+        if (isLineMode) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (currentPainType.equals(getResources().getString(R.string.pain_type_0))) {
+                        return false;
+                    }
+                    currentPath.moveTo(x, y);
+                    currentPainInfo = new PainInfo(currentPainType);
                     currentPainInfo.addCoordinate(x, y);
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                if (currentPainInfo != null) {
-                    painInfoList.add(currentPainInfo);
-                    currentPainInfo = null;
-                }
-                currentPath = new Path(); // Reset the path for the next stroke
-                break;
+                    return true;
+                case MotionEvent.ACTION_MOVE:
+                    currentPath.lineTo(x, y);
+                    if (currentPainInfo != null) {
+                        currentPainInfo.addCoordinate(x, y);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (currentPainInfo != null) {
+                        painInfoList.add(currentPainInfo);
+                        currentPainInfo = null;
+                    }
+                    currentPath = new Path();
+                    break;
+            }
         }
         invalidate();
         return true;
@@ -119,23 +117,23 @@ public class ViewPainDrag extends View {
         updatePaintStyle(currentPaint, currentPainType);
     }
 
+    public void setCurrentSwitchMode(boolean switchMode){
+        isLineMode = switchMode;
+    }
+
     private void updatePaintStyle(Paint paint, String painType) {
         if (painType.equals(getResources().getString(R.string.pain_type_1))) {
-            // Type 1: Yellow spiked line
             paint.setColor(Color.YELLOW);
-            paint.setPathEffect(new DashPathEffect(new float[]{15, 5}, 0)); // Spiked effect
+            paint.setPathEffect(new DashPathEffect(new float[]{15, 5}, 0));
         } else if (painType.equals(getResources().getString(R.string.pain_type_2))) {
-            // Type 2: Gray dotted line
             paint.setColor(Color.GRAY);
-            paint.setPathEffect(new DashPathEffect(new float[]{10, 10}, 0)); // Dotted effect
+            paint.setPathEffect(new DashPathEffect(new float[]{10, 10}, 0));
         } else if (painType.equals(getResources().getString(R.string.pain_type_3))) {
-            // Type 3: Red smooth line
             paint.setColor(Color.RED);
             paint.setStrokeCap(Paint.Cap.ROUND);
-            paint.setPathEffect(null); // Smooth line
+            paint.setPathEffect(null);
         } else {
-            // Default (Disabled or any other unknown type)
-            paint.setColor(Color.TRANSPARENT); // Transparent to make it invisible
+            paint.setColor(Color.TRANSPARENT);
             paint.setPathEffect(null);
         }
     }
