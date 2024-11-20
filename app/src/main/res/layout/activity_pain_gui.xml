@@ -1,224 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
+
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="1"
-    android:rowCount="2"
+    android:orientation="vertical"
     tools:context=".PainGUI">
 
-    <Button
-        android:id="@+id/btn_pain_input"
+    <GridLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_row="0"
-        android:layout_column="0"
-        android:text="고통입력▼" />
+        android:layout_height="match_parent"
+        android:columnCount="1"
+        android:rowCount="2">
 
-    <LinearLayout
-        android:id="@+id/layout_pain_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_row="1"
-        android:layout_column="0"
-        android:background="@color/teal_200"
-        android:orientation="vertical">
-
-        <GridLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/layout_pain_drag_grid"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:rowCount="2"
-            android:columnCount="4">
-
-            <!-- ViewPainDrag: 첫 번째 행의 전체 4칸을 차지 -->
-            <com.example.healthcareproject.painInput.ViewPainDrag
-                android:id="@+id/view_pain_drag"
-                android:layout_width="0dp"
-                android:layout_height="400dp"
-                android:layout_row="0"
-                android:layout_columnSpan="4"
-                android:layout_columnWeight="4"
-                android:layout_marginBottom="10dp"/>
-
-            <!-- 점/선 텍스트와 Switch: 두 번째 행의 첫 번째 칸 -->
-            <LinearLayout
-                android:id="@+id/layout_switch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_row="1"
-                android:layout_column="0"
-                android:layout_columnWeight="1"
-                android:gravity="center"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="점" />
-                <Switch
-                    android:id="@+id/switch_dot_line"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
-                    android:thumbTint="@color/switch_dot_color"
-                    android:trackTint="@color/switch_line_color"
-                    android:thumbTintMode="src_in"
-                    android:trackTintMode="src_in" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="선" />
-            </LinearLayout>
-
-            <!-- ImageButton 1: 두 번째 행의 두 번째 칸 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_row="1"
-                android:layout_column="1"
-                android:layout_columnWeight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageButton
-                    android:id="@+id/btn_pain_type1"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/pain_stabbing"
-                    android:background="@color/teal_200"
-                    android:contentDescription="@string/pain_type_1" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pain_type_1"
-                    android:gravity="center" />
-            </LinearLayout>
-
-            <!-- ImageButton 2: 두 번째 행의 세 번째 칸 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_row="1"
-                android:layout_column="2"
-                android:layout_columnWeight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageButton
-                    android:id="@+id/btn_pain_type2"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/pain_heavy"
-                    android:background="@color/teal_200"
-                    android:contentDescription="@string/pain_type_2" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pain_type_2"
-                    android:gravity="center" />
-            </LinearLayout>
-
-            <!-- ImageButton 3: 두 번째 행의 네 번째 칸 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_row="1"
-                android:layout_column="3"
-                android:layout_columnWeight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageButton
-                    android:id="@+id/btn_pain_type3"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/pain_throbbing"
-                    android:background="@color/teal_200"
-                    android:contentDescription="@string/pain_type_3" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pain_type_3"
-                    android:gravity="center" />
-            </LinearLayout>
-        </GridLayout>
-        <!-->400에 35<-->
-        <LinearLayout
-            android:id="@+id/layout_pain_intensity"
-            android:layout_width="match_parent"
-            android:layout_height="420dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:padding="16dp"
-            android:layout_marginBottom="40dp">
-
-            <ImageView
-                android:id="@+id/img_pain_intensity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/pain_intensity0"
-                android:contentDescription="@string/pain_intensity0_desc"
-                android:layout_gravity="center"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="8dp" />
-
-            <TextView
-                android:id="@+id/txt_pain_intensity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pain_intensity0_desc"
-                android:textSize="16sp"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp" />
-
-            <SeekBar
-                android:id="@+id/seekbar_pain_intensity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="4"
-                android:progress="0"
-                android:layout_gravity="start"
-                android:layout_marginTop="100dp"
-                android:layout_marginBottom="0dp"
-                android:thumbTint="@color/black"
-                android:progressTint="@color/black"/>
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_pain_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="0dp">
+            android:layout_row="0"
+            android:layout_column="0"
+            android:text="고통입력▼" />
+
+        <LinearLayout
+            android:id="@+id/layout_pain_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:background="@color/teal_200"
+            android:orientation="vertical">
+
+            <GridLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/layout_pain_drag_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:rowCount="2"
+                android:columnCount="4">
+
+                <!-- ViewPainDrag: 첫 번째 행의 전체 4칸을 차지 -->
+                <com.example.healthcareproject.painInput.ViewPainDrag
+                    android:id="@+id/view_pain_drag"
+                    android:layout_width="0dp"
+                    android:layout_height="400dp"
+                    android:layout_row="0"
+                    android:layout_columnSpan="4"
+                    android:layout_columnWeight="4"
+                    android:layout_marginBottom="10dp"/>
+
+                <!-- 점/선 텍스트와 Switch: 두 번째 행의 첫 번째 칸 -->
+                <LinearLayout
+                    android:id="@+id/layout_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:layout_columnWeight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="점" />
+                    <Switch
+                        android:id="@+id/switch_dot_line"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:thumbTint="@color/switch_dot_color"
+                        android:trackTint="@color/switch_line_color"
+                        android:thumbTintMode="src_in"
+                        android:trackTintMode="src_in" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="선" />
+                </LinearLayout>
+
+                <!-- ImageButton 1: 두 번째 행의 두 번째 칸 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="1"
+                    android:layout_columnWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageButton
+                        android:id="@+id/btn_pain_type1"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/pain_stabbing"
+                        android:background="@color/teal_200"
+                        android:contentDescription="@string/pain_type_1" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pain_type_1"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- ImageButton 2: 두 번째 행의 세 번째 칸 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="2"
+                    android:layout_columnWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageButton
+                        android:id="@+id/btn_pain_type2"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/pain_heavy"
+                        android:background="@color/teal_200"
+                        android:contentDescription="@string/pain_type_2" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pain_type_2"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- ImageButton 3: 두 번째 행의 네 번째 칸 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="3"
+                    android:layout_columnWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageButton
+                        android:id="@+id/btn_pain_type3"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/pain_throbbing"
+                        android:background="@color/teal_200"
+                        android:contentDescription="@string/pain_type_3" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pain_type_3"
+                        android:gravity="center" />
+                </LinearLayout>
+            </GridLayout>
+            <!-->400에 35<-->
+            <LinearLayout
+                android:id="@+id/layout_pain_intensity"
+                android:layout_width="match_parent"
+                android:layout_height="420dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:padding="16dp"
+                android:layout_marginBottom="40dp">
+
+                <ImageView
+                    android:id="@+id/img_pain_intensity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pain_intensity0"
+                    android:contentDescription="@string/pain_intensity0_desc"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/txt_pain_intensity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pain_intensity0_desc"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_pain_intensity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="4"
+                    android:progress="0"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginBottom="0dp"
+                    android:thumbTint="@color/black"
+                    android:progressTint="@color/black"/>
+            </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end">
-                <Button
-                    android:id="@+id/btnSave"
-                    android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="0dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="다음으로"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp" />
-                <Button
-                    android:id="@+id/btnErase"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="지우기"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp" />
+                    android:layout_weight="1"
+                    android:gravity="end">
+                    <Button
+                        android:id="@+id/btnSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="다음으로"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp" />
+                    <Button
+                        android:id="@+id/btnErase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="지우기"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-</GridLayout>
+    </GridLayout>
+    <ImageButton
+        android:id="@+id/btn_reload"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/reload_icon"
+        android:layout_gravity="bottom|end"
+        android:background="?attr/selectableItemBackground"/>
+</FrameLayout>

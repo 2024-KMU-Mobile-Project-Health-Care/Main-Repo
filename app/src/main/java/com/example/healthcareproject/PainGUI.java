@@ -19,6 +19,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.os.Handler;
 import android.os.Looper;
 
@@ -54,6 +56,7 @@ public class PainGUI extends AppCompatActivity {
     ImageView imgPainIntensity;
     TextView txtPainIntensity;
     SeekBar seekBarPainIntensity;
+    private ImageButton btnReload;
 
     private String[] painDesc;
     private int[] painImages;
@@ -98,6 +101,7 @@ public class PainGUI extends AppCompatActivity {
         imgPainIntensity = findViewById(R.id.img_pain_intensity);
         txtPainIntensity = findViewById(R.id.txt_pain_intensity);
         seekBarPainIntensity = findViewById(R.id.seekbar_pain_intensity);
+        btnReload = findViewById(R.id.btn_reload);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -237,7 +241,6 @@ public class PainGUI extends AppCompatActivity {
 
     private void loadAndShowPain(int painNum) {
         PainDatabaseHelper dbHelper = new PainDatabaseHelper(this);
-
         List<Map<String, String>> allPainInfo = dbHelper.getAllPainInfo();
 
         Collections.sort(allPainInfo, (pain1, pain2) -> {
@@ -252,7 +255,6 @@ public class PainGUI extends AppCompatActivity {
         for (int i = 0; i < dataCount; i++) {
             Map<String, String> painInfo = allPainInfo.get(i);
 
-            // 새로운 뷰 생성 및 데이터 설정
             View painDataView = getLayoutInflater().inflate(R.layout.pain_data_item, null);
             TextView locationText = painDataView.findViewById(R.id.txt_pain_location);
             TextView timeText = painDataView.findViewById(R.id.txt_pain_time);
@@ -264,7 +266,6 @@ public class PainGUI extends AppCompatActivity {
             typeText.setText(painInfo.get("painType"));
             intensityText.setText(painInfo.get("painIntensity"));
 
-            // 컨테이너에 추가
             painDataContainer.addView(painDataView);
         }
 
