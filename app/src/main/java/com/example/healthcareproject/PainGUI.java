@@ -101,7 +101,6 @@ public class PainGUI extends AppCompatActivity {
         imgPainIntensity = findViewById(R.id.img_pain_intensity);
         txtPainIntensity = findViewById(R.id.txt_pain_intensity);
         seekBarPainIntensity = findViewById(R.id.seekbar_pain_intensity);
-        btnReload = findViewById(R.id.btn_reload);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -216,6 +215,11 @@ public class PainGUI extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
+        });
+
+        btnReload = findViewById(R.id.btn_reload);
+        btnReload.setOnClickListener(v -> {
+            loadAndShowPain(2);
         });
 
     }
