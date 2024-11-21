@@ -1,5 +1,6 @@
 package com.example.healthcareproject;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,20 +9,27 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.healthcareproject.aiModel.AiMessage;
 import com.example.healthcareproject.aiModel.AiRequest;
 import com.example.healthcareproject.aiModel.AiResponse;
 import com.example.healthcareproject.aiModel.GPTApiService;
 import com.example.healthcareproject.aiModel.RetrofitClient;
+import com.example.healthcareproject.aiModel.AiFragment;
 import com.example.healthcareproject.painInput.PainDatabaseHelper;
 
 import java.io.IOException;
@@ -38,8 +46,6 @@ import retrofit2.Response;
 
 public class AiSummationActivity extends AppCompatActivity {
     Button btnAiProcess;
-    EditText etAiInput;
-    TextView tvAiResult;
     private Handler handler;
 
     @Override
@@ -51,15 +57,13 @@ public class AiSummationActivity extends AppCompatActivity {
         PainDatabaseHelper painDBHelper = new PainDatabaseHelper(getApplicationContext());
 
         btnAiProcess = (Button) findViewById(R.id.btn_ai_process);
-        etAiInput = (EditText) findViewById(R.id.et_ai_input);
-        tvAiResult = (TextView) findViewById(R.id.tv_ai_result);
 
         handler = new Handler(Looper.getMainLooper()) { // AI 결과를 받아오는 메세지 핸들러
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == 1) { // AI 통신 성공 시
                     Map<String,String> resultMap = (Map<String, String>) msg.obj;
-                    tvAiResult.setText(resultMap.toString());
+                    createFragment(resultMap);
                 } else if (msg.what == 0) { // 에러 발생 시
                     String errorMessage = (String) msg.obj;
                     Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
@@ -80,19 +84,27 @@ public class AiSummationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "답변을 생성하는 중입니다. 잠시 기다려 주세요.", Toast.LENGTH_LONG).show();
                 if(!allPainInfo.isEmpty()){
                     unifiedAiCall(allPainInfo); // AI 호출
-
-                    // 테스트용 코드 ~
-                    Set<String> temp = getAllPainSet(allPainInfo);
-                    Map<String, String> test = choicePainInfo(allPainInfo, temp);
-                    tvAiResult.setText(test.toString());
-                    // ~ 테스트용 코드
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "저장된 증상이 없습니다. 증상을 먼저 입력해 주세요.", Toast.LENGTH_LONG).show();
                 }
             }
         });
+
+        // 뒤로가기 버튼을 눌렀을 떄, 프래그먼트가 있다면 프래그먼트만 종료
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                if (fragmentManager.getBackStackEntryCount() > 0) {
+                    fragmentManager.popBackStack(); // 프래그먼트 제거
+                } else {
+                    finish(); // 백스택이 비어 있으면 액티비티 종료
+                }
+            }
+        });
     }
+
 
     // 증상 정보를 추출해 String화 시키는 메소드
     Map<String, String> choicePainInfo(List<Map<String, String>> allPainInfo, Set<String> painSet){
@@ -224,5 +236,15 @@ public class AiSummationActivity extends AppCompatActivity {
                 handler.sendMessage(message);
             }
         }).start();
+    }
+
+    void createFragment(Map<String, String> painMap){
+        Fragment fragment = new AiFragment(painMap);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.fragmentContainer, fragment); // XML로 정의된 FrameLayout 사용
+        transaction.addToBackStack(null); // 백스택에 추가
+        transaction.commit();
     }
 }
