@@ -11,7 +11,6 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Switch;
 
 import com.example.healthcareproject.R;
 
@@ -26,6 +25,9 @@ public class ViewPainDrag extends View {
     private PainInfo currentPainInfo;
     private String currentPainType;
     private boolean isLineMode;
+
+    private BitmapLayer bitmapLayer;
+    private PathLayer pathLayer;
 
     public ViewPainDrag(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -48,35 +50,32 @@ public class ViewPainDrag extends View {
         background = Bitmap.createScaledBitmap(originalBackground, newWidth, newHeight, true);
 
         updatePaintStyle(currentPaint, currentPainType);
+
+        // Initialize layers
+        bitmapLayer = new BitmapLayer();
+        pathLayer = new PathLayer();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         if (background != null) {
             canvas.drawBitmap(background, 0, 0, null);
         }
-        for (PainInfo painInfo : painInfoList) {
-            Paint paint = createPaintForPainType(painInfo.getPainType());
-            Path path = new Path();
-            List<float[]> coordinates = painInfo.getCoordinates();
 
-            if (!coordinates.isEmpty()) {
-                path.moveTo(coordinates.get(0)[0], coordinates.get(0)[1]);
-                for (int i = 1; i < coordinates.size(); i++) {
-                    path.lineTo(coordinates.get(i)[0], coordinates.get(i)[1]);
-                }
-            }
+        // Draw Path Layer
+        pathLayer.draw(canvas);
 
-            canvas.drawPath(path, paint);
-        }
-        canvas.drawPath(currentPath, currentPaint);
+        // Draw Bitmap Layer
+        bitmapLayer.draw(canvas);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
+
         if (isLineMode) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -87,15 +86,35 @@ public class ViewPainDrag extends View {
                     currentPainInfo = new PainInfo(currentPainType);
                     currentPainInfo.addCoordinate(x, y);
                     return true;
+
                 case MotionEvent.ACTION_MOVE:
                     currentPath.lineTo(x, y);
                     if (currentPainInfo != null) {
                         currentPainInfo.addCoordinate(x, y);
                     }
                     break;
+
                 case MotionEvent.ACTION_UP:
                     if (currentPainInfo != null) {
                         painInfoList.add(currentPainInfo);
+                        pathLayer.addPath(currentPainInfo, currentPath, currentPaint);
+                        currentPainInfo = null;
+                    }
+                    currentPath = new Path();
+                    break;
+            }
+        } else {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    currentPath.moveTo(x, y);
+                    currentPainInfo = new PainInfo(currentPainType);
+                    currentPainInfo.addCoordinate(x, y);
+                    return true;
+
+                case MotionEvent.ACTION_UP:
+                    if (currentPainInfo != null) {
+                        painInfoList.add(currentPainInfo);
+                        bitmapLayer.addBitmap(currentPainInfo, x, y);
                         currentPainInfo = null;
                     }
                     currentPath = new Path();
@@ -109,6 +128,8 @@ public class ViewPainDrag extends View {
     public void clearPath() {
         currentPath.reset();
         painInfoList.clear();
+        pathLayer.clearPaths();
+        bitmapLayer.clearBitmaps();
         invalidate();
     }
 
@@ -117,7 +138,7 @@ public class ViewPainDrag extends View {
         updatePaintStyle(currentPaint, currentPainType);
     }
 
-    public void setCurrentSwitchMode(boolean switchMode){
+    public void setCurrentSwitchMode(boolean switchMode) {
         isLineMode = switchMode;
     }
 
@@ -148,5 +169,86 @@ public class ViewPainDrag extends View {
 
     public List<PainInfo> getPainInfoList() {
         return painInfoList;
+    }
+
+    private Bitmap getBitmapForPainType(String painType) {
+        if (painType.equals(getResources().getString(R.string.pain_type_1))) {
+            return BitmapFactory.decodeResource(getResources(), R.drawable.pain_stabbing);
+        } else if (painType.equals(getResources().getString(R.string.pain_type_2))) {
+            return BitmapFactory.decodeResource(getResources(), R.drawable.pain_heavy);
+        } else if (painType.equals(getResources().getString(R.string.pain_type_3))) {
+            return BitmapFactory.decodeResource(getResources(), R.drawable.pain_throbbing);
+        }
+        return null;
+    }
+
+    private class PathLayer {
+        private List<PathInfo> paths;
+
+        public PathLayer() {
+            paths = new ArrayList<>();
+        }
+
+        public void addPath(PainInfo painInfo, Path path, Paint paint) {
+            paths.add(new PathInfo(path, createPaintForPainType(painInfo.getPainType())));
+        }
+
+        public void draw(Canvas canvas) {
+            for (PathInfo pathInfo : paths) {
+                canvas.drawPath(pathInfo.path, pathInfo.paint);
+            }
+        }
+
+        public void clearPaths() {
+            paths.clear();
+        }
+
+        private class PathInfo {
+            Path path;
+            Paint paint;
+
+            public PathInfo(Path path, Paint paint) {
+                this.path = new Path(path);
+                this.paint = new Paint(paint);
+            }
+        }
+    }
+
+    private class BitmapLayer {
+        private List<BitmapInfo> bitmaps;
+
+        public BitmapLayer() {
+            bitmaps = new ArrayList<>();
+        }
+
+        public void addBitmap(PainInfo painInfo, float x, float y) {
+            Bitmap bitmap = getBitmapForPainType(painInfo.getPainType());
+            if (bitmap != null) {
+                bitmaps.add(new BitmapInfo(bitmap, x, y));
+            }
+        }
+
+        public void draw(Canvas canvas) {
+            for (BitmapInfo bitmapInfo : bitmaps) {
+                canvas.drawBitmap(bitmapInfo.bitmap, bitmapInfo.x - (bitmapInfo.bitmap.getWidth() / 2),
+                        bitmapInfo.y - (bitmapInfo.bitmap.getHeight() / 2), null);
+            }
+        }
+
+        public void clearBitmaps() {
+            bitmaps.clear();
+        }
+
+        private class BitmapInfo {
+            Bitmap bitmap;
+            float x;
+            float y;
+
+            public BitmapInfo(Bitmap bitmap, float x, float y) {
+                this.bitmap = bitmap;
+                this.x = x;
+                this.y = y;
+            }
+        }
     }
 }
