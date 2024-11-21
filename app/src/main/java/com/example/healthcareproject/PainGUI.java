@@ -42,7 +42,7 @@ import java.util.Calendar;
 import java.util.Map;
 //painDataContainer UI 구성
 //중복 reload방지, 없으면 예외처리
-//점/선 구현
+
 public class PainGUI extends AppCompatActivity {
     private ViewPainDrag viewPainDrag;
     private LinearLayout layoutPainIntensity;
