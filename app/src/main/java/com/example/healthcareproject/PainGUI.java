@@ -270,15 +270,6 @@ public class PainGUI extends AppCompatActivity {
             Map<String, String> painInfo = allPainInfo.get(i);
 
             View painDataView = getLayoutInflater().inflate(R.layout.pain_data_item, null);
-            TextView locationText = painDataView.findViewById(R.id.txt_pain_location);
-            TextView timeText = painDataView.findViewById(R.id.txt_pain_time);
-            TextView typeText = painDataView.findViewById(R.id.txt_pain_type);
-            TextView intensityText = painDataView.findViewById(R.id.txt_pain_intensity);
-
-            locationText.setText(painInfo.get("painLocation"));
-            timeText.setText(painInfo.get("painStartTime"));
-            typeText.setText(painInfo.get("painType"));
-            intensityText.setText(painInfo.get("painIntensity"));
 
             painDataContainer.addView(painDataView);
         }
