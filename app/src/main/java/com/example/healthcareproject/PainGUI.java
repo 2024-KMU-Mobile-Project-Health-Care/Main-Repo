@@ -200,14 +200,13 @@ public class PainGUI extends AppCompatActivity {
             viewPainDrag.setCurrentPainType(R.string.pain_type_3);
             setPainTypeBtnActive(btnPainType3, btnPainType1, btnPainType2);
         });
-        btnPainType1.performClick(); // 자동으로 PainType1으로 시작하게끔 설정
+        btnPainType1.performClick();
 
         Drawable originalThumb = seekBarPainIntensity.getThumb();
-        Drawable enlargedThumb = ContextCompat.getDrawable(this, R.drawable.round_thumb); // 불룩하게 만든 thumb drawable
+        Drawable enlargedThumb = ContextCompat.getDrawable(this, R.drawable.round_thumb);
         seekBarPainIntensity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // 현재 progress에 맞는 설명과 이미지를 설정
                 txtPainIntensity.setText(painDesc[progress]);
                 imgPainIntensity.setImageResource(painImages[progress]);
                 int color = ContextCompat.getColor(PainGUI.this, painColors[progress]);
@@ -247,20 +246,20 @@ public class PainGUI extends AppCompatActivity {
         layoutPainDetails.startAnimation(slideDown);
     }
 
-    private void collapseLayout() {
+    private void collapseLayout(){
         Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         layoutPainDetails.startAnimation(slideUp);
         layoutPainDetails.setVisibility(View.GONE);
     }
 
-    private void loadAndShowPain(int painNum) {
+    private void loadAndShowPain(int painNum){
         PainDatabaseHelper dbHelper = new PainDatabaseHelper(this);
         List<Map<String, String>> allPainInfo = dbHelper.getAllPainInfo();
 
         Collections.sort(allPainInfo, (pain1, pain2) -> {
             String time1 = pain1.get("painStartTime");
             String time2 = pain2.get("painStartTime");
-            return time2.compareTo(time1); // 시간 내림차순 정렬
+            return time2.compareTo(time1);
         });
 
         int dataCount = Math.min(painNum, allPainInfo.size());
@@ -270,6 +269,8 @@ public class PainGUI extends AppCompatActivity {
             Map<String, String> painInfo = allPainInfo.get(i);
 
             View painDataView = getLayoutInflater().inflate(R.layout.pain_data_item, null);
+
+
 
             painDataContainer.addView(painDataView);
         }
