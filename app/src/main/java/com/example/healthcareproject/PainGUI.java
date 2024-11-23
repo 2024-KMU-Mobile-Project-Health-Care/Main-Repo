@@ -67,6 +67,7 @@ public class PainGUI extends AppCompatActivity {
     private String[] painDesc;
     private int[] painImages;
     private int[] painColors;
+    private int dbPointer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,7 @@ public class PainGUI extends AppCompatActivity {
 
         PainDatabaseHelper dbHelper = new PainDatabaseHelper(this); // for debugging
         dbHelper.deleteAllPainInfo(); // for debugging
+        dbPointer = 0;
 
         viewPainDrag = findViewById(R.id.view_pain_drag);
         layoutPainIntensity = findViewById(R.id.layout_pain_intensity);
@@ -263,10 +265,17 @@ public class PainGUI extends AppCompatActivity {
             return time2.compareTo(time1);
         });
 
+        int remainingData = allPainInfo.size() - dbPointer;
+        if (remainingData <= 0) {
+            Toast.makeText(this, "불러올 메시지가 없습니다.", Toast.LENGTH_SHORT).show();
+            dbHelper.close();
+            return;
+        }
+
         int dataCount = Math.min(painNum, allPainInfo.size());
 
         LinearLayout painDataContainer = findViewById(R.id.pain_data_container);
-        for (int i = 0; i < dataCount; i++) {
+        for (int i = dbPointer; i < dbPointer + dataCount; i++) {
             Map<String, String> painInfo = allPainInfo.get(i);
 
             View painDataView = getLayoutInflater().inflate(R.layout.pain_data_item, null);
@@ -294,6 +303,7 @@ public class PainGUI extends AppCompatActivity {
 
             painDataContainer.addView(painDataView);
         }
+        dbPointer += dataCount;
 
         dbHelper.close();
     }
