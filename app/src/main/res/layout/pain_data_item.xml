@@ -2,6 +2,7 @@
 <GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pain_data_item"
+    android:background="@drawable/edge_round_border"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:columnCount="2"
@@ -10,6 +11,7 @@
 
     <ImageView
         android:id="@+id/item_img"
+        android:background="@color/gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/body_back_muscle_lower"
@@ -80,7 +82,7 @@
 
             <Button
                 android:id="@+id/item_summary_btn"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_vertical|right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="요약하기"
