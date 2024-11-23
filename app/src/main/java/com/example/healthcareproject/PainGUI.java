@@ -24,7 +24,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.text.ParseException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import android.widget.ProgressBar;
@@ -33,6 +35,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.healthcareproject.painInput.Eng2Kor;
 import com.example.healthcareproject.painInput.PainDatabaseHelper;
 import com.example.healthcareproject.painInput.PainInfo;
 import com.example.healthcareproject.painInput.ProcessPainData;
@@ -41,7 +44,7 @@ import com.example.healthcareproject.painInput.ViewPainDrag;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
-
+//기본을 선으로 설정
 public class PainGUI extends AppCompatActivity {
     private ViewPainDrag viewPainDrag;
     private LinearLayout layoutPainIntensity;
@@ -65,7 +68,13 @@ public class PainGUI extends AppCompatActivity {
 
     private String[] painDesc;
     private int[] painImages;
-    private int[] painColors;
+    int[] painColors = {
+            R.color.blue,
+            R.color.green,
+            R.color.yellow,
+            R.color.orange,
+            R.color.red
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +96,6 @@ public class PainGUI extends AppCompatActivity {
                 R.drawable.pain_intensity2,
                 R.drawable.pain_intensity3,
                 R.drawable.pain_intensity4
-        };
-        int[] painColors = {
-                R.color.blue,
-                R.color.green,
-                R.color.yellow,
-                R.color.orange,
-                R.color.red
         };
 
         PainDatabaseHelper dbHelper = new PainDatabaseHelper(this); // for debugging
@@ -276,11 +278,24 @@ public class PainGUI extends AppCompatActivity {
             Button itemSummaryBtn = painDataView.findViewById(R.id.item_summary_btn);
 
             itemImg.setImageResource(R.drawable.body_back_muscle_lower);
-            itemHeader.setText(painInfo.getOrDefault("painLocation", "Unknown Location"));
-            itemTimestamp.setText(painInfo.getOrDefault("painStartTime", "Unknown Time"));
+            itemHeader.setText(Eng2Kor.getKor(painInfo.getOrDefault("painLocation", "Unknown Location")));
+
+            try {
+                String timestamp = painInfo.getOrDefault("painStartTime", "Unknown Time");
+                Date date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(timestamp);
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("yy/MM/dd HH시 mm분");
+                itemTimestamp.setText(simpleFormat.format(date));
+            } catch (ParseException e) {
+                itemTimestamp.setText("유효하지 않은 시간");
+                e.printStackTrace();
+            }
+
             itemPainType.setText(painInfo.getOrDefault("painType", "Unknown Pain Type"));
+
             int intensity = Integer.parseInt(painInfo.getOrDefault("painIntensity", "0"));
             itemPainIntensityBar.setProgress(intensity);
+            int color = ContextCompat.getColor(PainGUI.this, painColors[Math.min(intensity, painColors.length - 1)]);
+            itemPainIntensityBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
             itemSummaryBtn.setOnClickListener(v -> {
                 String message = "Location: " + painInfo.get("painLocation") +
@@ -293,8 +308,6 @@ public class PainGUI extends AppCompatActivity {
         }
         dbPointer = dataEnd;
         Log.d("dbPointer", String.valueOf(allPainInfo.size()) + " " + String.valueOf(dataEnd));
-
         dbHelper.close();
     }
-
 }
