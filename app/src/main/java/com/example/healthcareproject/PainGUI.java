@@ -27,6 +27,7 @@ import android.os.Looper;
 import java.util.Collections;
 import java.util.List;
 
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -269,8 +270,27 @@ public class PainGUI extends AppCompatActivity {
             Map<String, String> painInfo = allPainInfo.get(i);
 
             View painDataView = getLayoutInflater().inflate(R.layout.pain_data_item, null);
+            ImageView itemImg = painDataView.findViewById(R.id.item_img);
+            TextView itemHeader = painDataView.findViewById(R.id.item_header);
+            ImageView itemClockImg = painDataView.findViewById(R.id.item_clock_img);
+            TextView itemTimestamp = painDataView.findViewById(R.id.item_timestamp);
+            TextView itemPainType = painDataView.findViewById(R.id.item_pain_type);
+            ProgressBar itemPainIntensityBar = painDataView.findViewById(R.id.item_pain_intensity_bar);
+            Button itemSummaryBtn = painDataView.findViewById(R.id.item_summary_btn);
 
+            itemImg.setImageResource(R.drawable.body_back_muscle_lower);
+            itemHeader.setText(painInfo.getOrDefault("painLocation", "Unknown Location"));
+            itemTimestamp.setText(painInfo.getOrDefault("painStartTime", "Unknown Time"));
+            itemPainType.setText(painInfo.getOrDefault("painType", "Unknown Pain Type"));
+            int intensity = Integer.parseInt(painInfo.getOrDefault("painIntensity", "0"));
+            itemPainIntensityBar.setProgress(intensity);
 
+            itemSummaryBtn.setOnClickListener(v -> {
+                String message = "Location: " + painInfo.get("painLocation") +
+                        "\nType: " + painInfo.get("painType") +
+                        "\nIntensity: " + painInfo.get("painIntensity");
+                Toast.makeText(PainGUI.this, message, Toast.LENGTH_SHORT).show();
+            });
 
             painDataContainer.addView(painDataView);
         }
