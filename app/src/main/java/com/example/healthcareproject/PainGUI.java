@@ -41,8 +41,6 @@ import com.example.healthcareproject.painInput.ViewPainDrag;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
-//painDataContainer UI 구성
-//중복 reload방지, 없으면 예외처리
 
 public class PainGUI extends AppCompatActivity {
     private ViewPainDrag viewPainDrag;
@@ -51,6 +49,7 @@ public class PainGUI extends AppCompatActivity {
     private GridLayout layoutPainDrag;
     private boolean isExpanded = true;
     private boolean isAnimating = false;
+    private int dbPointer = 0;
     Button btnPainInput;
     Button btnSave;
     Button btnErase;
@@ -156,12 +155,6 @@ public class PainGUI extends AppCompatActivity {
                 }
 
                 List<Map<String, String>> allPainInfo = dbHelper.getAllPainInfo();
-                for (Map<String, String> painInfo : allPainInfo) {
-                    Log.d("PainInfo", "Location: " + painInfo.get("painLocation")
-                            + ", Time: " + painInfo.get("painStartTime")
-                            + ", Type: " + painInfo.get("painType")
-                            + ", Intensity: " + painInfo.get("painIntensity"));
-                }
 
                 dbHelper.close();
                 viewPainDrag.clearPath();
@@ -260,19 +253,23 @@ public class PainGUI extends AppCompatActivity {
         Collections.sort(allPainInfo, (pain1, pain2) -> {
             String time1 = pain1.get("painStartTime");
             String time2 = pain2.get("painStartTime");
-            return time2.compareTo(time1);
+            return time1.compareTo(time2);
         });
 
-        int dataCount = Math.min(painNum, allPainInfo.size());
+        if (dbPointer >= allPainInfo.size()) {
+            Toast.makeText(this, "불러올 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int dataEnd = Math.min(dbPointer + painNum, allPainInfo.size());
 
         LinearLayout painDataContainer = findViewById(R.id.pain_data_container);
-        for (int i = 0; i < dataCount; i++) {
+        for (int i = dbPointer; i < dataEnd; i++) {
             Map<String, String> painInfo = allPainInfo.get(i);
 
             View painDataView = getLayoutInflater().inflate(R.layout.pain_data_item, null);
             ImageView itemImg = painDataView.findViewById(R.id.item_img);
             TextView itemHeader = painDataView.findViewById(R.id.item_header);
-            ImageView itemClockImg = painDataView.findViewById(R.id.item_clock_img);
             TextView itemTimestamp = painDataView.findViewById(R.id.item_timestamp);
             TextView itemPainType = painDataView.findViewById(R.id.item_pain_type);
             ProgressBar itemPainIntensityBar = painDataView.findViewById(R.id.item_pain_intensity_bar);
@@ -294,6 +291,8 @@ public class PainGUI extends AppCompatActivity {
 
             painDataContainer.addView(painDataView);
         }
+        dbPointer = dataEnd;
+        Log.d("dbPointer", String.valueOf(allPainInfo.size()) + " " + String.valueOf(dataEnd));
 
         dbHelper.close();
     }
