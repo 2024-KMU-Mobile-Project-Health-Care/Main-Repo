@@ -51,7 +51,6 @@ public class PainGUI extends AppCompatActivity {
     private LinearLayout layoutPainDetails;
     private GridLayout layoutPainDrag;
     private boolean isExpanded = true;
-    private boolean isAnimating = false;
     private int dbPointer = 0;
     Button btnPainInput;
     Button btnSave;
