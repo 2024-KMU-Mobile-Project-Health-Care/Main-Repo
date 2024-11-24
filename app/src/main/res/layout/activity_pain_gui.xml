@@ -12,20 +12,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
-            <LinearLayout
-                android:id="@+id/pain_data_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp"
-                android:layout_marginTop="50dp"
-                app:layout_constraintTop_toBottomOf="@id/main"
-                />
-        </ScrollView>
 
     <GridLayout
         android:id="@+id/main"
@@ -246,6 +232,20 @@
             </LinearLayout>
         </LinearLayout>
     </GridLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@id/main">
+            <LinearLayout
+                android:id="@+id/pain_data_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                />
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -2,8 +2,11 @@ package com.example.healthcareproject;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -299,7 +302,14 @@ public class PainGUI extends AppCompatActivity {
             int intensity = Integer.parseInt(painInfo.getOrDefault("painIntensity", "0"));
             itemPainIntensityBar.setProgress(intensity);
             int color = ContextCompat.getColor(PainGUI.this, painColors[Math.min(intensity, painColors.length - 1)]);
-            itemPainIntensityBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                itemPainIntensityBar.getProgressDrawable().setColorFilter(
+                        new BlendModeColorFilter(color, BlendMode.SRC_IN)
+                );
+            } else {
+                itemPainIntensityBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            }
+
 
             itemCopyImg.setOnClickListener(new View.OnClickListener() {
                 @Override
