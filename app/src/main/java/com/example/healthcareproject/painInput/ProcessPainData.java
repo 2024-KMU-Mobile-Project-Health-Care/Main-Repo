@@ -18,7 +18,7 @@ public class ProcessPainData {
         put("Scapula Left", new int[]{330, 80, 430, 230});
         put("Shoulder Right", new int[]{100, 75, 170, 155});
         put("Shoulder Left", new int[]{430, 75, 500, 155});
-        put("Latissimus dorsi", new int[]{150, 260, 450, 500});
+        put("Latissimus dorsi", new int[]{150, 280, 450, 500});
         put("Trapezius", new int[]{140, 30, 460, 100});
         put("Rhomboids", new int[]{265, 100, 335, 200});
         put("Erector spinae", new int[]{290, 0, 310, 550});

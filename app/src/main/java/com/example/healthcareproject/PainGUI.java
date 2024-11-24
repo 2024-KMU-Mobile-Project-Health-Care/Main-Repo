@@ -284,7 +284,9 @@ public class PainGUI extends AppCompatActivity {
             ProgressBar itemPainIntensityBar = painDataView.findViewById(R.id.item_pain_intensity_bar);
             ImageView itemCopyImg = painDataView.findViewById(R.id.item_copy_img);
 
-            itemImg.setImageResource(R.drawable.body_back_muscle_lower);
+            String partName = painInfo.get("painLocation");
+            itemImg.setImageResource(selectItemImage(partName));
+
             itemHeader.setText(Eng2Kor.getKor(painInfo.getOrDefault("painLocation", "Unknown Location")));
 
             try {
@@ -340,4 +342,47 @@ public class PainGUI extends AppCompatActivity {
         Log.d("dbPointer", String.valueOf(allPainInfo.size()) + " " + String.valueOf(dataEnd));
         dbHelper.close();
     }
+    private int selectItemImage(String partName) {
+        switch (partName) {
+            // 척추
+            case "Cervical vertebrae":
+            case "Thoracic vertebrae":
+            case "Lumbar vertebrae":
+            case "Sacrum":
+            case "Coccyx":
+                return R.drawable.body_back_backbone;
+
+            // 어깨뼈
+            case "Scapula Left":
+                return R.drawable.body_back_wing;
+            case "Scapula Right":
+                return R.drawable.body_back_wing;
+
+            // 날개뼈
+            case "Shoulder Left":
+                return R.drawable.body_back_shoulder;
+            case "Shoulder Right":
+                return R.drawable.body_back_shoulder;
+
+            case "Trapezius":
+            case "Levator scapulae Left":
+            case "Levator scapulae Right":
+                return R.drawable.body_back_muscle_upper;
+
+            case "Rhomboids":
+            case "Infraspinatus Left":
+            case "Infraspinatus Right":
+            case "Teres minor Left":
+            case "Teres minor Right":
+                return R.drawable.body_back_muscle_middle;
+
+            case "Latissimus dorsi":
+            case "Erector spinae":
+                return R.drawable.body_back_muscle_lower;
+
+            default:
+                return 0;
+        }
+    }
+
 }
