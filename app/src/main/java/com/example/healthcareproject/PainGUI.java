@@ -1,5 +1,7 @@
 package com.example.healthcareproject;
 
+import android.content.ClipData;
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -51,6 +53,7 @@ public class PainGUI extends AppCompatActivity {
     private LinearLayout layoutPainDetails;
     private GridLayout layoutPainDrag;
     private boolean isExpanded = true;
+    private boolean isAnimating = false;
     private int dbPointer = 0;
     Button btnPainInput;
     Button btnSave;
@@ -276,7 +279,7 @@ public class PainGUI extends AppCompatActivity {
             TextView itemTimestamp = painDataView.findViewById(R.id.item_timestamp);
             TextView itemPainType = painDataView.findViewById(R.id.item_pain_type);
             ProgressBar itemPainIntensityBar = painDataView.findViewById(R.id.item_pain_intensity_bar);
-            Button itemSummaryBtn = painDataView.findViewById(R.id.item_summary_btn);
+            ImageView itemCopyImg = painDataView.findViewById(R.id.item_copy_img);
 
             itemImg.setImageResource(R.drawable.body_back_muscle_lower);
             itemHeader.setText(Eng2Kor.getKor(painInfo.getOrDefault("painLocation", "Unknown Location")));
@@ -298,12 +301,27 @@ public class PainGUI extends AppCompatActivity {
             int color = ContextCompat.getColor(PainGUI.this, painColors[Math.min(intensity, painColors.length - 1)]);
             itemPainIntensityBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
-            itemSummaryBtn.setOnClickListener(v -> {
-                String message = "Location: " + painInfo.get("painLocation") +
-                        "\nType: " + painInfo.get("painType") +
-                        "\nIntensity: " + painInfo.get("painIntensity");
-                Toast.makeText(PainGUI.this, message, Toast.LENGTH_SHORT).show();
+            itemCopyImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String painLocation = painInfo.getOrDefault("painLocation", "알 수 없음");
+                    String painTime = painInfo.getOrDefault("painStartTime", "알 수 없음");
+                    String painType = painInfo.getOrDefault("painType", "알 수 없음");
+                    int painIntensity = Integer.parseInt(painInfo.getOrDefault("painIntensity", "0")) + 1; // 강도는 1을 더함
+
+                    String copyText = "통증 위치 : " + Eng2Kor.getKor(painLocation) + "\n"
+                            + "통증 시간 : " + painTime + "\n"
+                            + "통증 유형 : " + painType + "\n"
+                            + "통증 강도 : " + painIntensity + "/5\n";
+
+                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("통증 정보", copyText);
+                    clipboard.setPrimaryClip(clip);
+
+                    Toast.makeText(PainGUI.this, "복사되었습니다:\n", Toast.LENGTH_SHORT).show();
+                }
             });
+
 
             painDataContainer.addView(painDataView);
         }

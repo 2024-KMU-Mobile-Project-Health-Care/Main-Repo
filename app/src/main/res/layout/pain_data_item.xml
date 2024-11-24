@@ -80,13 +80,16 @@
                 android:clickable="false"
                 android:focusable="false" />
 
-            <Button
-                android:id="@+id/item_summary_btn"
+            <ImageView
+                android:id="@+id/item_copy_img"
                 android:layout_gravity="center_vertical|right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="요약하기"
-                android:layout_margin="4dp" />
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/pain_copy"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_margin="4dp"
+                android:background="@null" />
         </LinearLayout>
     </LinearLayout>
 </GridLayout>
