@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:columnCount="2"
     android:padding="8dp"
-    android:layout_margin="4dp">
+    android:layout_margin="8dp">
 
     <ImageView
         android:id="@+id/item_img"
@@ -19,7 +19,7 @@
         android:layout_marginRight="14dp"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="4dp">
@@ -55,7 +55,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="4dp">
