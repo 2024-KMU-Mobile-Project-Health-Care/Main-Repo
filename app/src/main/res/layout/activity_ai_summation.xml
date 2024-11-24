@@ -14,20 +14,6 @@
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal">
 
-        <EditText
-            android:id="@+id/et_ai_input"
-            android:layout_width="wrap_content"
-            android:layout_height="64dip"
-            android:hint="고통 정도를 입력하세요."/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
-
         <Button
             android:id="@+id/btn_ai_process"
             android:layout_width="wrap_content"
@@ -37,19 +23,10 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
-
-        <TextView
-            android:id="@+id/tv_ai_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="결과가 여기에 표시됩니다."/>
-
-
-    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 </LinearLayout>
