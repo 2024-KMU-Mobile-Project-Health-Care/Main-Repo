@@ -42,10 +42,8 @@ public class ProcessPainData {
             for (float[] coordinate : coordinates) {
                 String closestRegion = findClosestRegion(coordinate[0], coordinate[1]);
 
-                // 고유 키 생성: "location|type" 형식
                 String uniqueKey = closestRegion + "|" + painType;
 
-                // 중복되지 않는 경우에만 추가
                 if (uniquePainDataSet.add(uniqueKey)) {
                     Map<String, String> painData = new HashMap<>();
                     painData.put("painLocation", closestRegion);
