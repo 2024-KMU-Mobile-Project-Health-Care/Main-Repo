@@ -69,6 +69,10 @@ public class ViewPainDrag extends View {
 
         // Draw Bitmap Layer
         bitmapLayer.draw(canvas);
+
+        if (!currentPath.isEmpty()) {
+            canvas.drawPath(currentPath, currentPaint);
+        }
     }
 
     @Override
@@ -85,6 +89,7 @@ public class ViewPainDrag extends View {
                     currentPath.moveTo(x, y);
                     currentPainInfo = new PainInfo(currentPainType);
                     currentPainInfo.addCoordinate(x, y);
+                    invalidate();
                     return true;
 
                 case MotionEvent.ACTION_MOVE:
@@ -92,6 +97,7 @@ public class ViewPainDrag extends View {
                     if (currentPainInfo != null) {
                         currentPainInfo.addCoordinate(x, y);
                     }
+                    invalidate();
                     break;
 
                 case MotionEvent.ACTION_UP:
@@ -101,6 +107,7 @@ public class ViewPainDrag extends View {
                         currentPainInfo = null;
                     }
                     currentPath = new Path();
+                    invalidate();
                     break;
             }
         } else {
@@ -109,12 +116,12 @@ public class ViewPainDrag extends View {
                     currentPath.moveTo(x, y);
                     currentPainInfo = new PainInfo(currentPainType);
                     currentPainInfo.addCoordinate(x, y);
+                    bitmapLayer.addBitmap(currentPainInfo, x, y);
                     return true;
 
                 case MotionEvent.ACTION_UP:
                     if (currentPainInfo != null) {
                         painInfoList.add(currentPainInfo);
-                        bitmapLayer.addBitmap(currentPainInfo, x, y);
                         currentPainInfo = null;
                     }
                     currentPath = new Path();

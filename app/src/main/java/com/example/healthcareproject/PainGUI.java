@@ -225,7 +225,7 @@ public class PainGUI extends AppCompatActivity {
 
         btnReload = findViewById(R.id.btn_reload);
         btnReload.setOnClickListener(v -> {
-            loadAndShowPain(2);
+            loadAndShowPain(6);
         });
 
         switchDotLine = findViewById(R.id.switch_dot_line);
