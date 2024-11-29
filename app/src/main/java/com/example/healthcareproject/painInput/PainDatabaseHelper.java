@@ -100,4 +100,13 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_NAME, null, null);
         db.close();
     }
+
+    public void updatePredictedDisease(String timestamp, String predictedDisease) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PREDICTED_DISEASE, predictedDisease);
+        db.update(TABLE_NAME, values, COLUMN_TIMESTAMP + " = ?", new String[]{timestamp});
+        db.close();
+    }
+
 }

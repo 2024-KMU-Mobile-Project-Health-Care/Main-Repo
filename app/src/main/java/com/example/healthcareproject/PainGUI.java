@@ -45,6 +45,7 @@ import com.example.healthcareproject.painInput.PainDatabaseHelper;
 import com.example.healthcareproject.painInput.PainInfo;
 import com.example.healthcareproject.painInput.ProcessPainData;
 import com.example.healthcareproject.painInput.ViewPainDrag;
+import com.example.healthcareproject.aiModel.AiPredictDisease;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -156,14 +157,20 @@ public class PainGUI extends AppCompatActivity {
                 String timeStamp = timeFormatter.format(calendar.getTime());
                 List<Map<String, String>> processedPainData = ProcessPainData.processPainData(painInfoList, timeStamp);
 
-                //PainDatabaseHelper dbHelper = new PainDatabaseHelper(PainGUI.this);
                 for (Map<String, String> painData : processedPainData) {
                     String location = painData.get("painLocation");
                     String painType = painData.get("painType");
-                    dbHelper.insertPainInfo(location, timeStamp, painType, seekBarPainIntensity.getProgress());
+                    dbHelper.insertPainInfo(
+                            location,
+                            timeStamp,
+                            painType,
+                            seekBarPainIntensity.getProgress()
+                    );
                 }
 
                 List<Map<String, String>> allPainInfo = dbHelper.getAllPainInfo();
+                String predictedDisease = AiPredictDisease.makePrediction(allPainInfo);
+                dbHelper.updatePredictedDisease(timeStamp, predictedDisease);
 
                 dbHelper.close();
                 viewPainDrag.clearPath();
