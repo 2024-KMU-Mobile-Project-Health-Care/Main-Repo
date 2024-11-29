@@ -50,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 //기본을 선으로 설정
+//데이터에서 중복을 허용하는 것
 public class PainGUI extends AppCompatActivity {
     private ViewPainDrag viewPainDrag;
     private LinearLayout layoutPainIntensity;
