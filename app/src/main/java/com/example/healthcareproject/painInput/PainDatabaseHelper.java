@@ -15,15 +15,15 @@ import java.util.HashMap;
 public class PainDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "PainData.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // Incremented version
 
-    // 테이블 및 컬럼 정의
     private static final String TABLE_NAME = "PainInfo";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_LOCATION = "location";
     private static final String COLUMN_TIMESTAMP = "timestamp";
     private static final String COLUMN_PAIN_TYPE = "painType";
     private static final String COLUMN_PAIN_INTENSITY = "painIntensity";
+    private static final String COLUMN_PREDICTED_DISEASE = "predictedDisease"; // New column
 
     public PainDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,30 +36,34 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_LOCATION + " TEXT, "
                 + COLUMN_TIMESTAMP + " TEXT, "
                 + COLUMN_PAIN_TYPE + " TEXT, "
-                + COLUMN_PAIN_INTENSITY + " INTEGER)";
+                + COLUMN_PAIN_INTENSITY + " INTEGER, "
+                + COLUMN_PREDICTED_DISEASE + " TEXT)";
         db.execSQL(CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(db);
+        if (oldVersion < 2) { // Handle upgrade to version 2
+            db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COLUMN_PREDICTED_DISEASE + " TEXT");
+        }
     }
 
-    // 데이터 삽입 메서드
     public void insertPainInfo(String location, String timestamp, String painType, int painIntensity) {
+        insertPainInfo(location, timestamp, painType, painIntensity, null);
+    }
+
+    public void insertPainInfo(String location, String timestamp, String painType, int painIntensity, String predictedDisease) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_LOCATION, location);
         values.put(COLUMN_TIMESTAMP, timestamp);
         values.put(COLUMN_PAIN_TYPE, painType);
         values.put(COLUMN_PAIN_INTENSITY, painIntensity);
-
+        values.put(COLUMN_PREDICTED_DISEASE, predictedDisease);
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
 
-    // 데이터 가져오기 메서드
     public List<Map<String, String>> getAllPainInfo() {
         List<Map<String, String>> painInfoList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -70,8 +74,9 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
             int timestampIndex = cursor.getColumnIndex(COLUMN_TIMESTAMP);
             int painTypeIndex = cursor.getColumnIndex(COLUMN_PAIN_TYPE);
             int painIntensityIndex = cursor.getColumnIndex(COLUMN_PAIN_INTENSITY);
+            int predictedDiseaseIndex = cursor.getColumnIndex(COLUMN_PREDICTED_DISEASE);
 
-            if (locationIndex == -1 || timestampIndex == -1 || painTypeIndex == -1) {
+            if (locationIndex == -1 || timestampIndex == -1 || painTypeIndex == -1 || predictedDiseaseIndex == -1) {
                 Log.e("DatabaseError", "One or more columns are missing in the database.");
             } else {
                 do {
@@ -80,6 +85,7 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
                     painInfo.put("painStartTime", cursor.getString(timestampIndex));
                     painInfo.put("painType", cursor.getString(painTypeIndex));
                     painInfo.put("painIntensity", cursor.getString(painIntensityIndex));
+                    painInfo.put("predictedDisease", cursor.getString(predictedDiseaseIndex));
                     painInfoList.add(painInfo);
                 } while (cursor.moveToNext());
             }
@@ -91,8 +97,7 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
 
     public void deleteAllPainInfo() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, null, null); // 모든 행 삭제
+        db.delete(TABLE_NAME, null, null);
         db.close();
     }
-
 }
