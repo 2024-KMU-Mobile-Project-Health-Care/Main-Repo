@@ -1,6 +1,5 @@
 package com.example.healthcareproject;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,10 +7,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,12 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.healthcareproject.aiModel.AiMessage;
 import com.example.healthcareproject.aiModel.AiProcess;
-import com.example.healthcareproject.aiModel.AiRequest;
-import com.example.healthcareproject.aiModel.AiResponse;
-import com.example.healthcareproject.aiModel.GPTApiService;
-import com.example.healthcareproject.aiModel.RetrofitClient;
 import com.example.healthcareproject.aiModel.AiFragment;
 import com.example.healthcareproject.painInput.Eng2Kor;
 import com.example.healthcareproject.painInput.PainDatabaseHelper;
@@ -41,10 +31,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AiSummationActivity extends AppCompatActivity {
     Button btnAiProcess;
@@ -89,19 +75,6 @@ public class AiSummationActivity extends AppCompatActivity {
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "저장된 증상이 없습니다. 증상을 먼저 입력해 주세요.", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        // 뒤로가기 버튼을 눌렀을 떄, 프래그먼트가 있다면 프래그먼트만 종료
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (fragmentManager.getBackStackEntryCount() > 0) {
-                    fragmentManager.popBackStack(); // 프래그먼트 제거
-                } else {
-                    finish(); // 백스택이 비어 있으면 액티비티 종료
                 }
             }
         });
@@ -177,7 +150,6 @@ public class AiSummationActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.fragmentContainer, fragment); // XML로 정의된 FrameLayout 사용
-        transaction.addToBackStack(null); // 백스택에 추가
         transaction.commit();
     }
 }
