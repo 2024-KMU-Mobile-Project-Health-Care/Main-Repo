@@ -54,7 +54,8 @@ public class AiSummationActivity extends AppCompatActivity {
                     createFragment(resultMap);
                 } else if (msg.what == 0) { // 에러 발생 시
                     String errorMessage = (String) msg.obj;
-                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                    Log.e("AiSummationMessageHandler", errorMessage);
+                    Toast.makeText(getApplicationContext(), "AI 호출 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.", Toast.LENGTH_LONG).show();
                 }
             }
         };
