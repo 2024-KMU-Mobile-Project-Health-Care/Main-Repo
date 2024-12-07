@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,8 +13,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnPainGui;
-    Button btnAiSummation;
+    ImageButton btnPainGui;
+    ImageButton btnAiSummation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        btnPainGui = (Button) findViewById(R.id.btn_pain_gui);
-        btnAiSummation = (Button) findViewById(R.id.btn_ai_summation);
+        btnPainGui = (ImageButton) findViewById(R.id.btn_pain_gui);
+        btnAiSummation = (ImageButton) findViewById(R.id.btn_ai_summation);
 
         btnPainGui.setOnClickListener(new View.OnClickListener() {
             @Override
