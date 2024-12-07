@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.healthcareproject.aiModel.AiCallback;
 import com.example.healthcareproject.aiModel.AiProcess;
 import com.example.healthcareproject.aiModel.AiFragment;
 import com.example.healthcareproject.painInput.Eng2Kor;
@@ -34,7 +35,6 @@ import java.util.Set;
 
 public class AiSummationActivity extends AppCompatActivity {
     Button btnAiProcess;
-    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,20 +45,6 @@ public class AiSummationActivity extends AppCompatActivity {
         PainDatabaseHelper painDBHelper = new PainDatabaseHelper(getApplicationContext());
 
         btnAiProcess = (Button) findViewById(R.id.btn_ai_process);
-
-        handler = new Handler(Looper.getMainLooper()) { // AI 결과를 받아오는 메세지 핸들러
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 1) { // AI 통신 성공 시
-                    Map<String,String> resultMap = (Map<String, String>) msg.obj;
-                    createFragment(resultMap);
-                } else if (msg.what == 0) { // 에러 발생 시
-                    String errorMessage = (String) msg.obj;
-                    Log.e("AiSummationMessageHandler", errorMessage);
-                    Toast.makeText(getApplicationContext(), "AI 호출 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.", Toast.LENGTH_LONG).show();
-                }
-            }
-        };
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -122,26 +108,35 @@ public class AiSummationActivity extends AppCompatActivity {
     // 모든 메소드를 활용하여 증상 부위별로 분리
     // 증상의 요약을 Map 형태로 핸들러에 넘김
     void unifiedAiCall(List<Map<String, String>> allPainInfo) {
-        new Thread(() -> {
-            try {
-                Set<String> painSet = getAllPainSet(allPainInfo);
-                Map<String, String> painMap = choicePainInfo(allPainInfo, painSet);
-                AiProcess aiProcess = new AiProcess();
-                Map<String, String> resultMap = new HashMap<>();
+        Set<String> painSet = getAllPainSet(allPainInfo);
+        Map<String, String> painMap = choicePainInfo(allPainInfo, painSet);
+        AiProcess aiProcess = new AiProcess();
+        Map<String, String> resultMap = new HashMap<>();
 
-                for (String painLocation : painSet) {
-                    String painInfo = painMap.get(painLocation);
-                    String translatedPainLocation = Eng2Kor.getKor(painLocation);
-                    String summationInfo = aiProcess.textSummationAi(translatedPainLocation + painInfo);
-                    resultMap.put(translatedPainLocation, summationInfo);
+        for (String painLocation : painSet) {
+            String painInfo = painMap.get(painLocation);
+            String translatedPainLocation = Eng2Kor.getKor(painLocation);
+
+            // AiProcess 호출
+            aiProcess.textSummationAi(translatedPainLocation + painInfo, new AiCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    synchronized (resultMap) {
+                        resultMap.put(translatedPainLocation, result);
+                        if (resultMap.size() == painSet.size()) {
+                            createFragment(resultMap); // 모든 작업 완료 시 프래그먼트 생성
+                        }
+                    }
                 }
-                Message message = handler.obtainMessage(1, resultMap);
-                handler.sendMessage(message);
-            } catch (Exception e) {
-                Message message = handler.obtainMessage(0, e.getMessage());
-                handler.sendMessage(message);
-            }
-        }).start();
+
+                @Override
+                public void onFailure(Exception e) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "AI 호출 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+                }
+            });
+        }
     }
 
     // 동적 프래그먼트 생성

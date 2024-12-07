@@ -40,6 +40,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.healthcareproject.aiModel.AiCallback;
 import com.example.healthcareproject.painInput.Eng2Kor;
 import com.example.healthcareproject.painInput.PainDatabaseHelper;
 import com.example.healthcareproject.painInput.PainInfo;
@@ -169,8 +170,18 @@ public class PainGUI extends AppCompatActivity {
                 }
 
                 List<Map<String, String>> allPainInfo = dbHelper.getAllPainInfo();
-                String predictedDisease = AiPredictDisease.makePrediction(allPainInfo);
-                dbHelper.updatePredictedDisease(timeStamp, predictedDisease);
+                AiPredictDisease.makePrediction(allPainInfo, new AiCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Log.d("Disease Predict Test", result);
+                        dbHelper.updatePredictedDisease(timeStamp, result);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.e("AiPredictDisease", e.getMessage().toString());
+                    }
+                });
 
                 dbHelper.close();
                 viewPainDrag.clearPath();
