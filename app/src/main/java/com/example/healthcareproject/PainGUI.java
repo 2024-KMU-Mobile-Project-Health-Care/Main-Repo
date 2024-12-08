@@ -302,6 +302,7 @@ public class PainGUI extends AppCompatActivity {
             TextView itemPainType = painDataView.findViewById(R.id.item_pain_type);
             ProgressBar itemPainIntensityBar = painDataView.findViewById(R.id.item_pain_intensity_bar);
             ImageView itemCopyImg = painDataView.findViewById(R.id.item_copy_img);
+            TextView itemPredictedDisease = painDataView.findViewById(R.id.item_predicted_disease);
 
             String partName = painInfo.get("painLocation");
             itemImg.setImageResource(selectItemImage(partName));
@@ -331,6 +332,8 @@ public class PainGUI extends AppCompatActivity {
                 itemPainIntensityBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
             }
 
+            itemPredictedDisease.setText(painInfo.getOrDefault("predictedDisease", "로딩 중..."));
+
 
             itemCopyImg.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -339,11 +342,12 @@ public class PainGUI extends AppCompatActivity {
                     String painTime = painInfo.getOrDefault("painStartTime", "알 수 없음");
                     String painType = painInfo.getOrDefault("painType", "알 수 없음");
                     int painIntensity = Integer.parseInt(painInfo.getOrDefault("painIntensity", "0")) + 1; // 강도는 1을 더함
-
+                    String painPredictedDisease = painInfo.getOrDefault("predictedDisease", "알 수 없음");
                     String copyText = "통증 위치 : " + Eng2Kor.getKor(painLocation) + "\n"
                             + "통증 시간 : " + painTime + "\n"
                             + "통증 유형 : " + painType + "\n"
-                            + "통증 강도 : " + painIntensity + "/5\n";
+                            + "통증 강도 : " + painIntensity + "/5\n"
+                            + "예상 질환 : " + painPredictedDisease;
 
                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("통증 정보", copyText);

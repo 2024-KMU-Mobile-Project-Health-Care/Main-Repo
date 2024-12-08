@@ -109,4 +109,29 @@ public class PainDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void printAllPainInfo() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                String location = cursor.getString(cursor.getColumnIndex(COLUMN_LOCATION));
+                String timestamp = cursor.getString(cursor.getColumnIndex(COLUMN_TIMESTAMP));
+                String painType = cursor.getString(cursor.getColumnIndex(COLUMN_PAIN_TYPE));
+                int painIntensity = cursor.getInt(cursor.getColumnIndex(COLUMN_PAIN_INTENSITY));
+                String predictedDisease = cursor.getString(cursor.getColumnIndex(COLUMN_PREDICTED_DISEASE));
+
+                Log.d("PainDatabaseHelper", "ID: " + id + ", Location: " + location +
+                        ", Timestamp: " + timestamp + ", PainType: " + painType +
+                        ", PainIntensity: " + painIntensity + ", PredictedDisease: " + predictedDisease);
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("PainDatabaseHelper", "No records found in the database.");
+        }
+
+        cursor.close();
+        db.close();
+    }
+
 }
