@@ -41,7 +41,7 @@ public class AiPredictDisease {
              */
         }
         StringBuilder predictedDiseaseString = new StringBuilder();
-        Log.d("TESTTTEEST", recentPainInfo.toString());
+        //Log.d("TESTTTEEST", recentPainInfo.toString());
         AiProcess aiProcess = new AiProcess();
         aiProcess.diseasePredictAi(recentPainInfo.toString(), new AiCallback<String>() {
             @Override

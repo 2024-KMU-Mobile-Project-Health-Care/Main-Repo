@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.healthcareproject.R;
@@ -39,10 +42,12 @@ import java.util.Map;
 
 public class AiFragment extends Fragment {
     private Map<String, String> painElements;
+    private Map<String, Integer> intensityMap;
     private String contextmenuPainPoint;
 
-    public AiFragment(Map<String, String> inputMap) {
+    public AiFragment(Map<String, String> inputMap, Map<String, Integer> intensityMap) {
         painElements = inputMap;
+        this.intensityMap = intensityMap;
     }
 
     @Nullable
@@ -72,6 +77,34 @@ public class AiFragment extends Fragment {
                     // 버튼 생성
                     Button button = new Button(getContext());
                     button.setText(element);
+                    button.setTextColor(Color.WHITE);
+                    button.setTypeface(null, Typeface.BOLD);
+                    button.setShadowLayer(4, 2, 2, Color.BLACK);
+                    int maxIntensity = 0;
+                    try{
+                        maxIntensity = intensityMap.get(element);
+                    }
+                    catch (Exception e){
+                        maxIntensity = 0;
+                    }
+                    switch (maxIntensity){
+                        case 0:
+                            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue));
+                            break;
+                        case 1:
+                            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green));
+                            break;
+                        case 2:
+                            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.yellow));
+                            break;
+                        case 3:
+                            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.orange));
+                            break;
+                        case 4:
+                            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red));
+                            break;
+                    }
+
                     button.setGravity(Gravity.CENTER);
 
                     // 버튼 크기 설정

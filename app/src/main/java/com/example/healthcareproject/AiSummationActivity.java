@@ -1,16 +1,12 @@
 package com.example.healthcareproject;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -25,8 +21,6 @@ import com.example.healthcareproject.aiModel.AiFragment;
 import com.example.healthcareproject.painInput.Eng2Kor;
 import com.example.healthcareproject.painInput.PainDatabaseHelper;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -67,12 +61,14 @@ public class AiSummationActivity extends AppCompatActivity {
         });
     }
 
-    // 증상 정보를 추출해 String화 시키는 메소드
-    Map<String, String> choicePainInfo(List<Map<String, String>> allPainInfo, Set<String> painSet){
+    // 증상 정보를 추출해 String 화 시키는 메소드. 추가적으로 통증의 최대값도 return함.
+    Pair<Map<String, String>, Map<String, Integer>> choicePainInfo(List<Map<String, String>> allPainInfo, Set<String> painSet){
         Map<String, String> painList = new HashMap<>();
+        Map<String, Integer> painIntensityMap = new HashMap<>();
         boolean firstValue = true;
         for(String painPoint:painSet){
             StringBuilder result = new StringBuilder();
+            int maxIntensity = 0;
             for(Map<String, String> painInfo:allPainInfo){
                 String temp = painInfo.get("painLocation");
                 if(temp != null && temp.equals(painPoint)){
@@ -84,13 +80,24 @@ public class AiSummationActivity extends AppCompatActivity {
                         result.append("&");
                     }
                     result.append(painInfo.get("painIntensity")).append(", ").append(painInfo.get("painType")).append(", ").append(painInfo.get("painStartTime"));
+                    int intensity;
+                    try {
+                        intensity = Integer.parseInt(painInfo.get("painIntensity"));
+                    }
+                    catch (Exception e){
+                        intensity = 0;
+                    }
+                    if(maxIntensity < intensity){
+                        maxIntensity = intensity;
+                    }
                 }
             }
             result.append("]");
             painList.put(painPoint, result.toString());
+            painIntensityMap.put(Eng2Kor.getKor(painPoint), maxIntensity);
             firstValue = true;
         }
-        return painList;
+        return Pair.create(painList, painIntensityMap);
     }
 
     // 증상 발생 위치만 정리하는 메소드
@@ -109,7 +116,10 @@ public class AiSummationActivity extends AppCompatActivity {
     // 증상의 요약을 Map 형태로 핸들러에 넘김
     void unifiedAiCall(List<Map<String, String>> allPainInfo) {
         Set<String> painSet = getAllPainSet(allPainInfo);
-        Map<String, String> painMap = choicePainInfo(allPainInfo, painSet);
+        Pair<Map<String, String>, Map<String, Integer>> result;
+        result = choicePainInfo(allPainInfo, painSet);
+        Map<String, String> painMap = result.first;
+        Map<String, Integer> intensityMap = result.second;
         AiProcess aiProcess = new AiProcess();
         Map<String, String> resultMap = new HashMap<>();
 
@@ -124,7 +134,7 @@ public class AiSummationActivity extends AppCompatActivity {
                     synchronized (resultMap) {
                         resultMap.put(translatedPainLocation, result);
                         if (resultMap.size() == painSet.size()) {
-                            createFragment(resultMap); // 모든 작업 완료 시 프래그먼트 생성
+                            createFragment(resultMap, intensityMap); // 모든 작업 완료 시 프래그먼트 생성
                         }
                     }
                 }
@@ -140,8 +150,8 @@ public class AiSummationActivity extends AppCompatActivity {
     }
 
     // 동적 프래그먼트 생성
-    void createFragment(Map<String, String> painMap){
-        Fragment fragment = new AiFragment(painMap);
+    void createFragment(Map<String, String> painMap, Map<String, Integer> intensityMap){
+        Fragment fragment = new AiFragment(painMap, intensityMap);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
