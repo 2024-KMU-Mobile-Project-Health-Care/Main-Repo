@@ -1,6 +1,5 @@
 package com.example.healthcareproject;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,10 +7,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,12 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.healthcareproject.aiModel.AiMessage;
+import com.example.healthcareproject.aiModel.AiCallback;
 import com.example.healthcareproject.aiModel.AiProcess;
-import com.example.healthcareproject.aiModel.AiRequest;
-import com.example.healthcareproject.aiModel.AiResponse;
-import com.example.healthcareproject.aiModel.GPTApiService;
-import com.example.healthcareproject.aiModel.RetrofitClient;
 import com.example.healthcareproject.aiModel.AiFragment;
 import com.example.healthcareproject.painInput.Eng2Kor;
 import com.example.healthcareproject.painInput.PainDatabaseHelper;
@@ -42,13 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class AiSummationActivity extends AppCompatActivity {
     Button btnAiProcess;
-    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +45,6 @@ public class AiSummationActivity extends AppCompatActivity {
         PainDatabaseHelper painDBHelper = new PainDatabaseHelper(getApplicationContext());
 
         btnAiProcess = (Button) findViewById(R.id.btn_ai_process);
-
-        handler = new Handler(Looper.getMainLooper()) { // AI 결과를 받아오는 메세지 핸들러
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 1) { // AI 통신 성공 시
-                    Map<String,String> resultMap = (Map<String, String>) msg.obj;
-                    createFragment(resultMap);
-                } else if (msg.what == 0) { // 에러 발생 시
-                    String errorMessage = (String) msg.obj;
-                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
-                }
-            }
-        };
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -89,19 +62,6 @@ public class AiSummationActivity extends AppCompatActivity {
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "저장된 증상이 없습니다. 증상을 먼저 입력해 주세요.", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        // 뒤로가기 버튼을 눌렀을 떄, 프래그먼트가 있다면 프래그먼트만 종료
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (fragmentManager.getBackStackEntryCount() > 0) {
-                    fragmentManager.popBackStack(); // 프래그먼트 제거
-                } else {
-                    finish(); // 백스택이 비어 있으면 액티비티 종료
                 }
             }
         });
@@ -148,26 +108,35 @@ public class AiSummationActivity extends AppCompatActivity {
     // 모든 메소드를 활용하여 증상 부위별로 분리
     // 증상의 요약을 Map 형태로 핸들러에 넘김
     void unifiedAiCall(List<Map<String, String>> allPainInfo) {
-        new Thread(() -> {
-            try {
-                Set<String> painSet = getAllPainSet(allPainInfo);
-                Map<String, String> painMap = choicePainInfo(allPainInfo, painSet);
-                AiProcess aiProcess = new AiProcess();
-                Map<String, String> resultMap = new HashMap<>();
+        Set<String> painSet = getAllPainSet(allPainInfo);
+        Map<String, String> painMap = choicePainInfo(allPainInfo, painSet);
+        AiProcess aiProcess = new AiProcess();
+        Map<String, String> resultMap = new HashMap<>();
 
-                for (String painLocation : painSet) {
-                    String painInfo = painMap.get(painLocation);
-                    String translatedPainLocation = Eng2Kor.getKor(painLocation);
-                    String summationInfo = aiProcess.textSummationAi(translatedPainLocation + painInfo);
-                    resultMap.put(translatedPainLocation, summationInfo);
+        for (String painLocation : painSet) {
+            String painInfo = painMap.get(painLocation);
+            String translatedPainLocation = Eng2Kor.getKor(painLocation);
+
+            // AiProcess 호출
+            aiProcess.textSummationAi(translatedPainLocation + painInfo, new AiCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    synchronized (resultMap) {
+                        resultMap.put(translatedPainLocation, result);
+                        if (resultMap.size() == painSet.size()) {
+                            createFragment(resultMap); // 모든 작업 완료 시 프래그먼트 생성
+                        }
+                    }
                 }
-                Message message = handler.obtainMessage(1, resultMap);
-                handler.sendMessage(message);
-            } catch (Exception e) {
-                Message message = handler.obtainMessage(0, e.getMessage());
-                handler.sendMessage(message);
-            }
-        }).start();
+
+                @Override
+                public void onFailure(Exception e) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "AI 호출 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+                }
+            });
+        }
     }
 
     // 동적 프래그먼트 생성
@@ -177,7 +146,6 @@ public class AiSummationActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.fragmentContainer, fragment); // XML로 정의된 FrameLayout 사용
-        transaction.addToBackStack(null); // 백스택에 추가
         transaction.commit();
     }
 }
