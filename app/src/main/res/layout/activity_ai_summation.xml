@@ -6,27 +6,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AiSummationActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dip">
 
         <Button
             android:id="@+id/btn_ai_process"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "값 처리하기"
-            tools:ignore="MissingConstraints" />
-
+            android:text = "@string/ai_process"
+            tools:ignore="MissingConstraints"/>
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         />
+
 
 </LinearLayout>

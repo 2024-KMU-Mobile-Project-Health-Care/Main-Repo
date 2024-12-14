@@ -1,5 +1,6 @@
 package com.example.healthcareproject;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
@@ -29,6 +30,7 @@ import java.util.Set;
 
 public class AiSummationActivity extends AppCompatActivity {
     Button btnAiProcess;
+    private Toast currentToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,19 @@ public class AiSummationActivity extends AppCompatActivity {
             return insets;
         });
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("면책 조항")
+                .setMessage("본 애플리케이션에서 제공하는 요약 내용은 인공지능 알고리즘에 의해 생성된 결과로, 정보의 정확성과 완전성을 보장하지 않습니다.\n" +
+                        "사용자는 본 요약 내용을 참고 자료로만 활용해야 하며, 중요한 결정이나 행동을 하기 전에 반드시 추가적인 검토와 전문가의 조언을 받으시기 바랍니다.\n" +
+                        "본 애플리케이션은 제공된 정보로 인해 발생할 수 있는 손해, 오해 또는 문제에 대해 어떠한 책임도 지지 않음을 명확히 밝힙니다.\n" +
+                        "인공지능 요약 결과를 그대로 신뢰하거나 의존하는 행위는 사용자의 책임임을 유념해 주시기 바랍니다.")
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss()); // 닫기 버튼
+        builder.create().show();
+
         btnAiProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<Map<String, String>> allPainInfo = painDBHelper.getAllPainInfo();
-                Toast.makeText(getApplicationContext(), "답변을 생성하는 중입니다. 잠시 기다려 주세요.", Toast.LENGTH_LONG).show();
                 if(!allPainInfo.isEmpty()){
                     unifiedAiCall(allPainInfo); // AI 호출
                 }
@@ -133,8 +143,29 @@ public class AiSummationActivity extends AppCompatActivity {
                 public void onSuccess(String result) {
                     synchronized (resultMap) {
                         resultMap.put(translatedPainLocation, result);
+
                         if (resultMap.size() == painSet.size()) {
+                            runOnUiThread(() -> {
+                                if (currentToast != null) {
+                                    currentToast.cancel();
+                                }
+                                currentToast = Toast.makeText(getApplicationContext(),
+                                        "요약이 완료되었습니다!",
+                                        Toast.LENGTH_SHORT);
+                                currentToast.show();
+                            });
                             createFragment(resultMap, intensityMap); // 모든 작업 완료 시 프래그먼트 생성
+                        }
+                        else {
+                            runOnUiThread(() -> {
+                                if (currentToast != null) {
+                                    currentToast.cancel();
+                                }
+                                currentToast = Toast.makeText(getApplicationContext(),
+                                        String.format("요약 중입니다. (%d/%d)", resultMap.size(), painMap.size()),
+                                        Toast.LENGTH_SHORT);
+                                currentToast.show();
+                            });
                         }
                     }
                 }

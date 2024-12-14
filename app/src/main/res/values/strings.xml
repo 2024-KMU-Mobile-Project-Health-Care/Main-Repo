@@ -11,6 +11,7 @@
     <string name="pain_intensity2_desc">큰 동작을 하면 불편해요</string>
     <string name="pain_intensity3_desc">작은 동작에도 통증이 느껴져요</string>
     <string name="pain_intensity4_desc">항상 큰 통증이 느껴져요</string>
+    <string name="ai_process">"인공지능을 사용해 증상 요약하기"</string>
     <string name="menu_save_text">요약 정보 저장하기</string>
     <string name="menu_copy_text">요약 정보 복사하기</string>
 </resources>
