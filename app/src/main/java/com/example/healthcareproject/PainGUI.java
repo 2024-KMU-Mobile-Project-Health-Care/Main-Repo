@@ -107,7 +107,7 @@ public class PainGUI extends AppCompatActivity {
         };
 
         PainDatabaseHelper dbHelper = new PainDatabaseHelper(this); // for debugging
-        dbHelper.deleteAllPainInfo(); // for debugging
+        //dbHelper.deleteAllPainInfo(); // for debugging
         dbPointer = 0;
 
         viewPainDrag = findViewById(R.id.view_pain_drag);
