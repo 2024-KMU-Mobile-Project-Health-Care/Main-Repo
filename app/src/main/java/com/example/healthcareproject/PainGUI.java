@@ -352,8 +352,6 @@ public class PainGUI extends AppCompatActivity {
                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("통증 정보", copyText);
                     clipboard.setPrimaryClip(clip);
-
-                    Toast.makeText(PainGUI.this, "복사되었습니다:\n", Toast.LENGTH_SHORT).show();
                 }
             });
 
